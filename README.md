@@ -1,5 +1,7 @@
 🎉 Better! App
+
 What is the Better! App? 🚶‍♂️🏆
+
 The Better! App encourages fitness habit building by letting users challenge each other to step-counting competitions!
 
 Competitions are between 2 users, and progress is visually represented with a battery icon, showing how much of the daily step goal has been completed 🔋.
