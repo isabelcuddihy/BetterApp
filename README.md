@@ -1,97 +1,68 @@
-# BetterApp
-What is the Better! app?
+🎉 Better! App
+What is the Better! App? 🚶‍♂️🏆
+The Better! App encourages fitness habit building by letting users challenge each other to step-counting competitions!
 
-The Better! App encourages fitness habit building by having users challenge each other to step counting competitions
-Competitions are between 2 users and progress is measured by a battery icon showing how much progress a user have made toward their daily step goal
-The challenger with the most steps/goals met by the end of the competition is the winner!
-Integrated with the Apple Health to ensure steps are counted
-Competition with your friends to ensure motivation and positive support
+Competitions are between 2 users, and progress is visually represented with a battery icon, showing how much of the daily step goal has been completed 🔋.
+The winner is the challenger with the most steps or goals met by the end of the competition! 🏅
+Integrated with Apple Health to ensure accurate step tracking 📱.
+Compete with your friends for motivation and positive support 💪.
+🎯 Our Target Audience
+iPhone Users 18+: The app integrates with Apple Health and is developed in Swift, making it perfect for iOS users 📲.
+Fitness Enthusiasts: People who love staying active and tracking their progress 🏃‍♀️.
+Competitive Individuals: Those who enjoy a bit of friendly competition and pushing their limits! 🏋️‍♂️
+Why the Better! App? 🤔
+The Better! App stands out by combining fitness with fun through friendly competition:
 
-Our Target Audience
+🌟 A balanced approach between fitness tracking and social engagement.
+🔋 Visual progress through a battery icon so users can easily see who’s ahead in real-time.
+🎯 Integrated with Apple Health to ensure accurate step counting.
+🤝 Encourages positive support and motivation from friends.
+🏃‍♂️ Promotes lasting fitness habits through engaging and fun challenges.
+🌟 Landing Page/ Login & Create Profile
 
-iPhone Users 18+:  Since the app integrates with Apple Health and is being developed in Swift, it is designed to be used on the iOS ecosystem.
-
-Fitness Enthusiasts: Individuals who are active and enjoy tracking their progress!
-
-Competitive Individuals: People who are motivated by friendly competition and enjoy challenging their friends to meet fitness goals
-
-Why the Better! App: Our Significance
-
-The Better! App stands out by combining fitness and fun with a competitive edge. Unlike many fitness apps that are either purely social or strictly performance-focused, Better! brings a balanced approach, making walking enjoyable through friendly competition. By using visual progress with a battery icon, users can easily track their step goals and see who is ahead in real-time. Integrated with Apple Health, it ensures accurate step counting while encouraging motivation and positive support from friends. The app’s unique design fosters lasting fitness habits through engaging challenges, keeping users active and connected.
-
-Landing Page/ Login & Create Profile  
-
-We plan on having a welcome page where users can select if they wish to login or create a new account (for new users)
-A user can create a password (user authentication stored in Firebase)
-FLOW: Loading the app opens the landing page -> user choose login or create account and appropriate screen is pulled up
-
-A users profile page will track their current competition( if any) or let them start a new challenge
-
-
-Finding Challengers
-
+Landing Page: Users are welcomed with options to log in or create a new account ✨.
+Profile Page: Tracks ongoing competitions (if any) and allows users to start new challenges 📊.
+Finding Challengers 👥
 HOW USERS FIND CHALLENGERS
-Users add friends to their profile via searching their name
-If a user is not currently in a challenge, they can pick a challenger (someone who is not currently in a challenge - we will add some sort of logic to prevent selection if the person is already in a challenge)
-The user picking a challenge sets up the parameters like number of steps and number of days
-FLOW: From profile: create a new challenge-> select a challenge-> determine the parameter of the challenge-> challenge notification to second user
 
+Users can add friends to their profile via search 🔍.
+If a user isn't in a challenge, they can pick a challenger 🏃‍♀️.
+The challenger sets the parameters (number of steps, number of days) ⏳.
+A notification is sent to the second user 📲.
 
-Our Backend
+⚙️ Our Backend
+Profile: We use Firebase Authentication for secure user login 🔐.
+Database: Firebase Realtime Database stores user data, activity details, and goals 📊.
+Health Data Integration: Integrated with Apple Health for step data accuracy 🔄.
+Push Notifications: Users receive updates on competition progress and new challenges 🔔.
 
-Profile: We plan to integrate Firebase Authentication from Google for user authentication
+🧠 Sensors
+Camera & Photo Gallery: For updating profile pictures 📸.
+GPS Access (Upcoming Feature): To discover and challenge nearby users 🌍.
 
-Database: We plan to use Firebase Realtime Database to store and manage user data, activity details and goals
+🌟 FUTURE PLANS
+GPS Integration: Engage with users nearby, make new connections with the Apple Map API 🗺️.
+Team Challenges: Compete against groups of friends 👫.
+Multiple Challenges: Participate in several challenges at once 🚀.
+Other Habits: Expand into workouts, screen time limits, sleep tracking, and more 🛌💪.
 
-Health Data Integration: The app integrates with Apple Health to accurately retrieve and track the user’s step data
+📅 TIMELINES
+GOAL	DATE COMPLETION
+Build skeleton of app - UI Views	11/01/2024
+View Controllers, Moving Data, Delegates	11/11/2024
+Backend/User Authentication/Camera Access	11/18/2024
+Data Effects on Screens	11/25/2024
+Final Tweaks & Error Handling	12/04/2024
 
-Push Notifications: Users will be notified of important updates, such as competition progress and challenges from friends
+👥 GROUP TIMELINES
+Individual Contributions
+GROUP: Welcome, Register, Log-In/Sign-Up 📱.
+Haidar: Create a Challenge, Challenge Pop Up 🎯.
+Isabel: Finding Friends, Challenge Notification, Challenge Screen 🔔.
+Soni: Personal User Profile, Challenge Screen (Battery, Competitor) 🏋️‍♂️.
 
-
-Sensors
-
-Camera & Photo Gallery access for updating profile pictures 
-GPS access (upcoming feature) to discover and challenge users nearby
-
-FUTURE PLANS
-
-GPS Integration - larger social engagement, find new friends, make new connections - Apple Map API
-Team Challenges, compete against groups of people
-Multiple challenges at once
-Other habits, workouts (strength training/lifting, screen time limitations, sleep etc)
-
-
-
-TIMELINES
- GOAL
-DATE COMPLETION
-Build skeleton of app, all necessary screens with basic text labels and button (functionality not necessary) - UI Views
-11/01/2024
-View Controllers, Moving Data Between Screens, Delegates
-11/11/2024
-Setup Backend/User Authentication/Camera Accessibility
-11/18/2024
-Data Effects on Screens - Percentages during challenges, data fetching during use, Wins and lose updates, Friending, can’t challenge who is in a challenge
-11/25/2024
-Finish final tweaks to UX of app, ensure app is properly functioning, all errors are handled for user input or competitions work as expected
-12/04/2024
-
-
-GROUP TIMELINES
-
-Skeleton: TBD
-    3 Screens: Welcome, Register, Log-In/Sign-Up
-    4 Screens: Create a Challenge, Create a Challenge Pop Up, Notification
-    3 Screens: User Profile, Find My Friend, Challenge Screen
-
-Michael: Welcome, Register, Log-In/Sign-Up
-Haidar: Create a Challenge, Create a Challenge Pop Up (Finding Users)
-Isabel: Finding Friends to Add to Profile, Challenge Accept Notification,Challenge Screen
-Soni: Personal User Profile, Challenge Screen(Battery, days left, competitor)
-
-Make a git repo: a branch for each person
-2 weeks: views (frontend)
-4 weeks: viewcontrollers (backend)
-1.5 weeks: refine and debug
-
-
+Development Stages
+Git Repo: Branch for each person 💻.
+2 Weeks: Views (Frontend) 🎨.
+4 Weeks: ViewControllers (Backend) 🔧.
+1.5 Weeks: Refine and Debug 🐛.
