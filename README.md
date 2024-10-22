@@ -12,21 +12,21 @@ Compete with your friends for motivation and positive support 💪.
 iPhone Users 18+: The app integrates with Apple Health and is developed in Swift, making it perfect for iOS users 📲.
 Fitness Enthusiasts: People who love staying active and tracking their progress 🏃‍♀️.
 Competitive Individuals: Those who enjoy a bit of friendly competition and pushing their limits! 🏋️‍♂️
+
 Why the Better! App? 🤔
 The Better! App stands out by combining fitness with fun through friendly competition:
-
 🌟 A balanced approach between fitness tracking and social engagement.
 🔋 Visual progress through a battery icon so users can easily see who’s ahead in real-time.
 🎯 Integrated with Apple Health to ensure accurate step counting.
 🤝 Encourages positive support and motivation from friends.
 🏃‍♂️ Promotes lasting fitness habits through engaging and fun challenges.
-🌟 Landing Page/ Login & Create Profile
 
+🌟 Landing Page/ Login & Create Profile
 Landing Page: Users are welcomed with options to log in or create a new account ✨.
 Profile Page: Tracks ongoing competitions (if any) and allows users to start new challenges 📊.
+
 Finding Challengers 👥
 HOW USERS FIND CHALLENGERS
-
 Users can add friends to their profile via search 🔍.
 If a user isn't in a challenge, they can pick a challenger 🏃‍♀️.
 The challenger sets the parameters (number of steps, number of days) ⏳.
