@@ -52,11 +52,11 @@ Other Habits: Expand into workouts, screen time limits, sleep tracking, and more
 GOAL	DATE COMPLETION
 Build skeleton of app - UI Views	10/27/2024
 
-View Controllers, Moving Data, Delegates	11/10/2024
+Backend/User Authentication/Camera Access	11/02/2024
 
-Backend/User Authentication/Camera Access	11/17/2024
+View Controllers, Moving Data, Delegates	11/11/2024
 
-Data Effects on Screens	11/24/2024
+Data Effects on Screens	11/25/2024
 
 Final Tweaks & Error Handling	12/04/2024
 
