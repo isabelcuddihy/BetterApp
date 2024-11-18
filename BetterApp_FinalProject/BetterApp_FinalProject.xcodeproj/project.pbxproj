@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FD2154262CC731FE0089BC2E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FD2154252CC731FE0089BC2E /* Alamofire */; };
-		FD2154282CC731FE0089BC2E /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = FD2154272CC731FE0089BC2E /* AlamofireDynamic */; };
+		FDEE97EB2CEBAD660076CB07 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FDEE97EA2CEBAD660076CB07 /* FirebaseAuth */; };
+		FDEE97ED2CEBAD660076CB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = FDEE97EC2CEBAD660076CB07 /* FirebaseDatabase */; };
+		FDEE97EF2CEBAD660076CB07 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FDEE97EE2CEBAD660076CB07 /* FirebaseFirestore */; };
+		FDEE97F12CEBAD660076CB07 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = FDEE97F02CEBAD660076CB07 /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +43,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD2154262CC731FE0089BC2E /* Alamofire in Frameworks */,
-				FD2154282CC731FE0089BC2E /* AlamofireDynamic in Frameworks */,
+				FDEE97ED2CEBAD660076CB07 /* FirebaseDatabase in Frameworks */,
+				FDEE97F12CEBAD660076CB07 /* FirebaseStorage in Frameworks */,
+				FDEE97EB2CEBAD660076CB07 /* FirebaseAuth in Frameworks */,
+				FDEE97EF2CEBAD660076CB07 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +91,10 @@
 			packageProductDependencies = (
 				FD2154252CC731FE0089BC2E /* Alamofire */,
 				FD2154272CC731FE0089BC2E /* AlamofireDynamic */,
+				FDEE97EA2CEBAD660076CB07 /* FirebaseAuth */,
+				FDEE97EC2CEBAD660076CB07 /* FirebaseDatabase */,
+				FDEE97EE2CEBAD660076CB07 /* FirebaseFirestore */,
+				FDEE97F02CEBAD660076CB07 /* FirebaseStorage */,
 			);
 			productName = BetterApp_FinalProject;
 			productReference = FD21540C2CC731EC0089BC2E /* BetterApp_FinalProject.app */;
@@ -118,6 +126,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				FD2154242CC731FE0089BC2E /* XCRemoteSwiftPackageReference "Alamofire" */,
+				FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FD21540D2CC731EC0089BC2E /* Products */;
@@ -157,9 +166,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7CTR9HN4L4;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BetterApp_FinalProject/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -185,9 +195,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7CTR9HN4L4;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BetterApp_FinalProject/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -357,6 +368,14 @@
 				minimumVersion = 5.10.1;
 			};
 		};
+		FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -369,6 +388,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FD2154242CC731FE0089BC2E /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = AlamofireDynamic;
+		};
+		FDEE97EA2CEBAD660076CB07 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		FDEE97EC2CEBAD660076CB07 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		FDEE97EE2CEBAD660076CB07 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		FDEE97F02CEBAD660076CB07 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
