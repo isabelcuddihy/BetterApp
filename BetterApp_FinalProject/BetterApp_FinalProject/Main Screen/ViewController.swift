@@ -39,13 +39,14 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // adding in a listener to track user's sign-in status
         handleAuth = Auth.auth().addStateDidChangeListener{ auth, user in
             if user == nil{
                 print("User is nil")
                 //MARK: not signed in...
                 self.currentUser = nil
-                self.mainScreen.labelText.text = "Please sign in to see the notes!"
-                self.mainScreen.floatingButtonAddChat.isEnabled = false
+                self.mainScreen.labelText.text = "Please sign in to see your profile!" // 11/24 - changed String to fit our app better. Soni
+                self.mainScreen.floatingButtonAddChat.isEnabled = false // TD: you will need to update the button from AddChat to AddCompetition/Challenge to fit the Better App
                 self.mainScreen.floatingButtonAddChat.isHidden = true
                 
                 //MARK: Reset tableView...
@@ -63,7 +64,7 @@ class ViewController: UIViewController {
                 self.searchChatContactController.userName =  user?.displayName ?? "Anonymous"
                 
                 // get all most recent messages
-                self.fetchChatMessages()
+                self.fetchChatMessages() //TD: you will need to update this for Better App
                 //MARK: Logout bar button...
                 self.setupRightBarButton(isLoggedin: true)
             }
@@ -76,6 +77,7 @@ class ViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        // Removing the auth listener when view disappears to prevent unnecessary changes
         Auth.auth().removeStateDidChangeListener(handleAuth!)
     }
     
@@ -84,7 +86,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "My Messages"
+        // 11/24 - changed String to fit our app better. Soni
+        title = "My Profile"
   
         //MARK: patching table view delegate and data source...
         mainScreen.tableViewChats.delegate = self
@@ -330,6 +333,7 @@ class ViewController: UIViewController {
                 return
             }
             self.potentialContacts.removeAll()
+            // TD: verify that this is the place where we would add functionality for user data for Better App
             let names = querySnapshot?.documents.compactMap { document -> String in
                 let name = document.data()["name"] as? String ?? "Unknown"
                 let email = document.data()["email"] as? String ?? ""
