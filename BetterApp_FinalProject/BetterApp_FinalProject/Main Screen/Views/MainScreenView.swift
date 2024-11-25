@@ -3,12 +3,26 @@
 //  BetterApp_FinalProject
 //
 //  Created by Isabel Cuddihy on 11/18/24.
-//
+// TD: Convert this main screen to the main user profile page for better app
+// Note the personal details info can either be simple UI labels or we can convert it to the tableView from ChatsTableView. First ill try the simple UI labels and also reach out to group on which is better
+
 
 import UIKit
 
 
 class MainScreenView: UIView {
+    // 11/24 - Adding in UI elements for Better App Main Screen. Soni
+    
+
+    // Email Label
+    //var labelEmail: UILabel! TD: safe delete when verify not needed
+    // Competition_ID Label
+    var labelCompetitionID: UILabel!
+    // Wins Label
+    var labelWins: UILabel!
+    // Losses Label
+    var labelLosses: UILabel!
+    
     var profilePic: UIImageView!
     var labelText: UILabel!
     var floatingButtonAddChat: UIButton!
@@ -20,6 +34,11 @@ class MainScreenView: UIView {
         
         setupProfilePic()
         setupLabelText()
+        // 11/24 - Adding in UI elements for Better App Main Screen. Soni
+        //setupLabelEmail()
+        setupLabelCompetitionID()
+        setupLabelWins()
+        setupLabelLosses()
         setupFloatingButtonAddChat()
         setupTableViewChats()
         initConstraints()
@@ -41,6 +60,38 @@ class MainScreenView: UIView {
         labelText.font = .boldSystemFont(ofSize: 14)
         labelText.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelText)
+    }
+    
+//    func setupLabelEmail(){ TD: safe delete when verify not needed
+//        labelEmail = UILabel()
+//        labelEmail.text = "Email: soni@test.com" //dummy text data
+//        labelEmail.font = .boldSystemFont(ofSize: 14)
+//        labelEmail.translatesAutoresizingMaskIntoConstraints = false
+//        self.addSubview(labelEmail)
+//    }
+    
+    func setupLabelCompetitionID(){
+        labelCompetitionID = UILabel()
+        labelCompetitionID.text = "Current Competition: User1VSUser2" //dummy text data
+        labelCompetitionID.font = .boldSystemFont(ofSize: 14)
+        labelCompetitionID.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(labelCompetitionID)
+    }
+    
+    func setupLabelWins(){
+        labelWins = UILabel()
+        labelWins.text = "Wins: 5" //dummy text data
+        labelWins.font = .boldSystemFont(ofSize: 14)
+        labelWins.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(labelWins)
+    }
+    
+    func setupLabelLosses(){
+        labelLosses = UILabel()
+        labelLosses.text = "Losses: 0" //dummy text data
+        labelLosses.font = .boldSystemFont(ofSize: 14)
+        labelLosses.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(labelLosses)
     }
     
     func setupTableViewChats(){
@@ -79,7 +130,23 @@ class MainScreenView: UIView {
             labelText.bottomAnchor.constraint(equalTo: profilePic.bottomAnchor),
             labelText.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 8),
             
-            tableViewChats.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 8),
+            // 11/24 - Adding in UI elements for Better App Main Screen. Soni
+            // Competition ID Label
+           labelCompetitionID.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 16),
+           labelCompetitionID.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+           labelCompetitionID.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+
+           // Wins Label
+           labelWins.topAnchor.constraint(equalTo: labelCompetitionID.bottomAnchor, constant: 8),
+           labelWins.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+           labelWins.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+
+           // Losses Label
+           labelLosses.topAnchor.constraint(equalTo: labelWins.bottomAnchor, constant: 8),
+           labelLosses.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+           labelLosses.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            
+            tableViewChats.topAnchor.constraint(equalTo: labelLosses.bottomAnchor, constant: 8),
             tableViewChats.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -8),
             tableViewChats.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             tableViewChats.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
