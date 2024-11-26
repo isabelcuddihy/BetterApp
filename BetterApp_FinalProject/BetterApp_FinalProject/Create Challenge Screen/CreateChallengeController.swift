@@ -21,10 +21,8 @@ class CreateChallengeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // functionality for selecting days durration for challenge
-//        createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onAddChatButtonTapped), for: .touchUpInside)
-
-        // Do any additional setup after loading the view.
+        //MARK:  adding menue to buttonSelectDays
+        createChallengeView.buttonSelectDays.menu = getMenuTypes()
     }
     
 //    @objc func onAddChatButtonTapped(){
@@ -32,6 +30,21 @@ class CreateChallengeController: UIViewController {
 //        
 //        present(searchSheetNavController, animated: true)
 //    }
+    
+    //MARK: menu for buttonSelectDays setup...
+    func getMenuTypes() -> UIMenu{
+        var menuItems = [UIAction]()
+        
+        for type in Utilities.types{
+            let menuItem = UIAction(title: type,handler: {(_) in
+                                self.selectedType = type
+                                self.createChallengeView.buttonSelectDays.setTitle(self.selectedType, for: .normal)
+                            })
+            menuItems.append(menuItem)
+        }
+        
+        return UIMenu(title: "Select source", children: menuItems)
+    }
     
 
     

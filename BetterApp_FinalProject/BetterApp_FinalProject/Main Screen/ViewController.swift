@@ -63,10 +63,14 @@ class ViewController: UIViewController {
                 self.mainScreen.floatingButtonAddChat.isHidden = false
                 self.searchChatContactController.userName =  user?.displayName ?? "Anonymous"
                 
-                // get all most recent messages
-                self.fetchChatMessages() //TD: you will need to update this for Better App
-                //MARK: Logout bar button...
-                self.setupRightBarButton(isLoggedin: true)
+                let createChallengeViewController = CreateChallengeController()
+                                
+                self.navigationController?.pushViewController(createChallengeViewController, animated: true)
+                
+//                // get all most recent messages
+//                self.fetchChatMessages() //TD: you will need to update this for Better App
+//                //MARK: Logout bar button...
+//                self.setupRightBarButton(isLoggedin: true)
             }
             
         }

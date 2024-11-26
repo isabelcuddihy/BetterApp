@@ -124,9 +124,9 @@ class CreateChallengeView: UIView {
             buttonChooseFriend.topAnchor.constraint(equalTo: labelCreateChallenge.bottomAnchor, constant: 36),
             buttonChooseFriend.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
             
-            labelDays.topAnchor.constraint(equalTo: buttonChooseFriend.bottomAnchor, constant: 24),
+            labelDays.centerYAnchor.constraint(equalTo: buttonSelectDays.centerYAnchor),
             labelDays.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 96),
-
+            
             buttonSelectDays.topAnchor.constraint(equalTo: buttonChooseFriend.bottomAnchor, constant: 24),
             buttonSelectDays.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -96),
             
