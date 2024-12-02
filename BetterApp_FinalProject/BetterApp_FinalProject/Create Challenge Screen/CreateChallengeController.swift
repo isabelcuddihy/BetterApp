@@ -14,6 +14,9 @@ class CreateChallengeController: UIViewController {
     //MARK: by default day selected (7)
     var selectedType = "7"
     
+    let searchChatContactController = SearchBottomSheetController() // search bar for contacts
+    var searchSheetNavController: UINavigationController!
+    
     override func loadView() {
         view = createChallengeView
     }
@@ -23,13 +26,11 @@ class CreateChallengeController: UIViewController {
         
         //MARK:  adding menue to buttonSelectDays
         createChallengeView.buttonSelectDays.menu = getMenuTypes()
+        
+        createChallengeView.buttonChallenge.addTarget(self, action: #selector(onChallengeButtonTapped), for: .touchUpInside)
+        
+        
     }
-    
-//    @objc func onAddChatButtonTapped(){
-//        setupSearchBottomSheet()
-//        
-//        present(searchSheetNavController, animated: true)
-//    }
     
     //MARK: menu for buttonSelectDays setup...
     func getMenuTypes() -> UIMenu{
@@ -45,8 +46,25 @@ class CreateChallengeController: UIViewController {
         
         return UIMenu(title: "Select source", children: menuItems)
     }
+    // MARK: PLACEHOLDER
+    func setupSearchBottomSheet(){
+        //MARK: setting up bottom search sheet...
+        searchSheetNavController = UINavigationController(rootViewController: searchChatContactController)
+        
+        // MARK: setting up modal style...
+        searchSheetNavController.modalPresentationStyle = .pageSheet
+        
+        if let bottomSearchSheet = searchSheetNavController.sheetPresentationController{
+            bottomSearchSheet.detents = [.medium(), .large()]
+            bottomSearchSheet.prefersGrabberVisible = true
+        }
+    }
     
-
+    @objc func onChallengeButtonTapped(){
+        setupSearchBottomSheet()
+        
+        present(searchSheetNavController, animated: true)
+    }
     
 
 
