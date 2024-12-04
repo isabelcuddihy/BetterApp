@@ -89,8 +89,6 @@
 			);
 			name = BetterApp_FinalProject;
 			packageProductDependencies = (
-				FD2154252CC731FE0089BC2E /* Alamofire */,
-				FD2154272CC731FE0089BC2E /* AlamofireDynamic */,
 				FDEE97EA2CEBAD660076CB07 /* FirebaseAuth */,
 				FDEE97EC2CEBAD660076CB07 /* FirebaseDatabase */,
 				FDEE97EE2CEBAD660076CB07 /* FirebaseFirestore */,
@@ -125,7 +123,6 @@
 			mainGroup = FD2154032CC731EC0089BC2E;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				FD2154242CC731FE0089BC2E /* XCRemoteSwiftPackageReference "Alamofire" */,
 				FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -171,6 +168,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BetterApp_FinalProject/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your health data such as steps to provide personalized insights";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app writes health data to track your activity and progress";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -201,6 +200,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BetterApp_FinalProject/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "This app needs access to your health data such as steps to provide personalized insights";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app writes health data to track your activity and progress";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -362,14 +363,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FD2154242CC731FE0089BC2E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.1;
-			};
-		};
 		FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -381,16 +374,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FD2154252CC731FE0089BC2E /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FD2154242CC731FE0089BC2E /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		FD2154272CC731FE0089BC2E /* AlamofireDynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FD2154242CC731FE0089BC2E /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = AlamofireDynamic;
-		};
 		FDEE97EA2CEBAD660076CB07 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FDEE97E92CEBABD70076CB07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
