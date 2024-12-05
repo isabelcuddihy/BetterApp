@@ -30,7 +30,7 @@ class CreateChallengeController: UIViewController {
         //MARK:  adding menue to buttonSelectDays
         createChallengeView.buttonSelectDays.menu = getMenuTypes()
         
-        createChallengeView.buttonChallenge.addTarget(self, action: #selector(onChallengeButtonTapped), for: .touchUpInside)
+        createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onChooseFriendButtonTapped), for: .touchUpInside)
         
         // Request authorization when the view loads
         requestHealthKitAuthorization()
@@ -38,7 +38,7 @@ class CreateChallengeController: UIViewController {
         print("this statement is printed after view is loaded")
 //        
 //        createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onChooseFriendButtonTapped), for: .touchUpInside)
-//        
+//        onChallengeButtonTapped
     }
     
     //MARK: menu for buttonSelectDays setup...
@@ -69,7 +69,7 @@ class CreateChallengeController: UIViewController {
         }
     }
     
-    @objc func onChallengeButtonTapped(){
+    @objc func onChooseFriendButtonTapped(){
         setupSearchBottomSheet()
         
         present(searchSheetNavController, animated: true)
