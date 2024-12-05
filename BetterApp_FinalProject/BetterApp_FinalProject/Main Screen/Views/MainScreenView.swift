@@ -3,8 +3,6 @@
 //  BetterApp_FinalProject
 //
 //  Created by Isabel Cuddihy on 11/18/24.
-// TD: Convert this main screen to the main user profile page for better app
-// Note the personal details info can either be simple UI labels or we can convert it to the tableView from ChatsTableView. First ill try the simple UI labels and also reach out to group on which is better
 
 
 import UIKit
@@ -12,21 +10,16 @@ import UIKit
 
 class MainScreenView: UIView {
     // 11/24 - Adding in UI elements for Better App Main Screen. Soni
-    
-
-    // Email Label
-    //var labelEmail: UILabel! TD: safe delete when verify not needed
-    // Competition_ID Label
     var labelCompetitionID: UILabel!
-    // Wins Label
     var labelWins: UILabel!
-    // Losses Label
     var labelLosses: UILabel!
-    
+    var labelPersonalDetails: UILabel!
     var profilePic: UIImageView!
     var labelText: UILabel!
     var floatingButtonAddChat: UIButton!
-    var tableViewChats: UITableView!
+    var detailsContainerView: UIView! // UI element for details container
+    var stackView : UIStackView!
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,12 +28,12 @@ class MainScreenView: UIView {
         setupProfilePic()
         setupLabelText()
         // 11/24 - Adding in UI elements for Better App Main Screen. Soni
-        //setupLabelEmail()
         setupLabelCompetitionID()
         setupLabelWins()
         setupLabelLosses()
+        setupLabelPersonalDetails()
         setupFloatingButtonAddChat()
-        setupTableViewChats()
+        setupDetailsContainerView()
         initConstraints()
     }
     
@@ -48,12 +41,59 @@ class MainScreenView: UIView {
     func setupProfilePic(){
         profilePic = UIImageView()
         profilePic.image = UIImage(systemName: "person.circle")?.withRenderingMode(.alwaysOriginal)
+        // Changing it to green
+        profilePic.tintColor = .systemGreen
         profilePic.contentMode = .scaleToFill
         profilePic.clipsToBounds = true
         profilePic.layer.masksToBounds = true
         profilePic.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(profilePic)
     }
+    
+    func setupDetailsContainerView() {
+        // Creating the container view for personal details
+        detailsContainerView = UIView()
+        detailsContainerView.backgroundColor = .green
+        detailsContainerView.layer.masksToBounds = true
+        // Round the corners
+        detailsContainerView.layer.cornerRadius = 18
+        detailsContainerView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(detailsContainerView)
+
+        
+        // Creating the stack view to hold the labels
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = 6
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        detailsContainerView.addSubview(stackView)
+    
+        
+        // Add the labels to the stack view
+        stackView.addArrangedSubview(labelPersonalDetails)
+        stackView.addArrangedSubview(labelCompetitionID)
+        stackView.addArrangedSubview(labelWins)
+        stackView.addArrangedSubview(labelLosses)
+
+        // Set constraints for details container view and stack view
+        NSLayoutConstraint.activate([
+            // Details container constraints (size and position)
+            detailsContainerView.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 20),
+            detailsContainerView.widthAnchor.constraint(equalToConstant: 50),
+            detailsContainerView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            detailsContainerView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            
+            // Stack View Constraints (padding and centering)
+            stackView.topAnchor.constraint(equalTo: detailsContainerView.topAnchor, constant: 8),
+            stackView.leadingAnchor.constraint(equalTo: detailsContainerView.leadingAnchor, constant: 8),
+            stackView.trailingAnchor.constraint(equalTo: detailsContainerView.trailingAnchor, constant: -8),
+            stackView.bottomAnchor.constraint(equalTo: detailsContainerView.bottomAnchor, constant: -8),
+        ])
+          
+    }
+    
+ 
     
     func setupLabelText(){
         labelText = UILabel()
@@ -62,13 +102,14 @@ class MainScreenView: UIView {
         self.addSubview(labelText)
     }
     
-//    func setupLabelEmail(){ TD: safe delete when verify not needed
-//        labelEmail = UILabel()
-//        labelEmail.text = "Email: soni@test.com" //dummy text data
-//        labelEmail.font = .boldSystemFont(ofSize: 14)
-//        labelEmail.translatesAutoresizingMaskIntoConstraints = false
-//        self.addSubview(labelEmail)
-//    }
+    func setupLabelPersonalDetails(){
+        labelPersonalDetails = UILabel()
+        labelPersonalDetails.text = "Personal Details"
+        labelPersonalDetails.font = .boldSystemFont(ofSize: 18)
+        labelPersonalDetails.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(labelPersonalDetails)
+    }
+
     
     func setupLabelCompetitionID(){
         labelCompetitionID = UILabel()
@@ -94,12 +135,6 @@ class MainScreenView: UIView {
         self.addSubview(labelLosses)
     }
     
-    func setupTableViewChats(){
-        tableViewChats = UITableView()
-        tableViewChats.register(ChatTableViewCell.self, forCellReuseIdentifier: Configs.tableViewContactsID)
-        tableViewChats.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(tableViewChats)
-    }
     
     func setupFloatingButtonAddChat(){
         floatingButtonAddChat = UIButton(type: .system)
@@ -117,45 +152,32 @@ class MainScreenView: UIView {
         self.addSubview(floatingButtonAddChat)
     }
     
+  
+    
     
     //MARK: setting up constraints...
     func initConstraints(){
         NSLayoutConstraint.activate([
-            profilePic.widthAnchor.constraint(equalToConstant: 32),
-            profilePic.heightAnchor.constraint(equalToConstant: 32),
-            profilePic.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 8),
-            profilePic.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            profilePic.widthAnchor.constraint(equalToConstant: 100),
+            profilePic.heightAnchor.constraint(equalToConstant: 100),
+            profilePic.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            profilePic.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 40),
             
-            labelText.topAnchor.constraint(equalTo: profilePic.topAnchor),
-            labelText.bottomAnchor.constraint(equalTo: profilePic.bottomAnchor),
-            labelText.leadingAnchor.constraint(equalTo: profilePic.trailingAnchor, constant: 8),
+            labelText.topAnchor.constraint(equalTo: profilePic.topAnchor, constant: -20),
+            labelText.centerXAnchor.constraint(equalTo: profilePic.centerXAnchor),
             
-            // 11/24 - Adding in UI elements for Better App Main Screen. Soni
-            // Competition ID Label
-           labelCompetitionID.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 16),
-           labelCompetitionID.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-           labelCompetitionID.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            
+            // Details container
+            detailsContainerView.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 20),
+            detailsContainerView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            detailsContainerView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
 
-           // Wins Label
-           labelWins.topAnchor.constraint(equalTo: labelCompetitionID.bottomAnchor, constant: 8),
-           labelWins.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-           labelWins.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-
-           // Losses Label
-           labelLosses.topAnchor.constraint(equalTo: labelWins.bottomAnchor, constant: 8),
-           labelLosses.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-           labelLosses.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
-            tableViewChats.topAnchor.constraint(equalTo: labelLosses.bottomAnchor, constant: 8),
-            tableViewChats.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -8),
-            tableViewChats.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            tableViewChats.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            
+            // Floating Action Button
             floatingButtonAddChat.widthAnchor.constraint(equalToConstant: 48),
             floatingButtonAddChat.heightAnchor.constraint(equalToConstant: 48),
             floatingButtonAddChat.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             floatingButtonAddChat.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            
         ])
     }
     

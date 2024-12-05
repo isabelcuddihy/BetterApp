@@ -4,7 +4,7 @@
 //
 //  Created by Isabel Cuddihy on 10/21/24.
 // Test Haidar Commit Comment : i am cool
-// Test - Soni : the best ever
+
 
 import UIKit
 import FirebaseAuth
@@ -17,11 +17,15 @@ class ViewController: UIViewController {
     
     let mainScreen = MainScreenView()
     
-    var chatsList = [Chat]() // list for chats in main menu
+    // creating instance of our HealthManager
+    let healthManager = HealthManager()
+    var statusLabel: UILabel?
+   
+    var chatsList = [Chat]()
     let searchChatContactController = SearchBottomSheetController() // search bar for contacts
     var searchSheetNavController: UINavigationController!
-    var messagingContact = "" // selected person to message
-    var potentialContacts: [String: String] = [:] // all potential contacts as name:email
+    var messagingContact = ""
+    var potentialContacts: [String: String] = [:]
     let notificationCenter = NotificationCenter.default
     var handleAuth: AuthStateDidChangeListenerHandle?
     var currentUser:FirebaseAuth.User?
@@ -46,12 +50,11 @@ class ViewController: UIViewController {
                 //MARK: not signed in...
                 self.currentUser = nil
                 self.mainScreen.labelText.text = "Please sign in to see your profile!" // 11/24 - changed String to fit our app better. Soni
-                self.mainScreen.floatingButtonAddChat.isEnabled = false // TD: you will need to update the button from AddChat to AddCompetition/Challenge to fit the Better App
+                self.mainScreen.floatingButtonAddChat.isEnabled = false
                 self.mainScreen.floatingButtonAddChat.isHidden = true
                 
                 //MARK: Reset tableView...
                 self.chatsList.removeAll()
-                self.mainScreen.tableViewChats.reloadData()
                 //MARK: Sign in bar button...
                 self.setupRightBarButton(isLoggedin: false)
             }else{
@@ -62,9 +65,10 @@ class ViewController: UIViewController {
                 self.mainScreen.floatingButtonAddChat.isEnabled = true
                 self.mainScreen.floatingButtonAddChat.isHidden = false
                 self.searchChatContactController.userName =  user?.displayName ?? "Anonymous"
+
                 
                 // get all most recent messages
-                self.fetchChatMessages() //TD: you will need to update this for Better App
+                self.fetchChatMessages()
                 //MARK: Logout bar button...
                 self.setupRightBarButton(isLoggedin: true)
             }
@@ -88,14 +92,36 @@ class ViewController: UIViewController {
         
         // 11/24 - changed String to fit our app better. Soni
         title = "My Profile"
+        
+        // Create a label to display the HealthKit status
+        let statusLabel = UILabel()
+        statusLabel.frame = CGRect(x: 20, y: 400, width: 300, height: 50)
+        //statusLabel.text = "HealthKit Status: Not started"
+        view.addSubview(statusLabel)
+        
+        // Store reference to the label so it can be updated later
+        //self.statusLabel = statusLabel
+        
+        // Check HealthKit authorization and update status
+        healthManager.requestAuthorization { [weak self] success in
+          DispatchQueue.main.async {
+              if success {
+                  self?.statusLabel?.text = "HealthKit Access Granted"
+                  self?.healthManager.saveStepCount() // Save the step count after authorization
+              } else {
+                  self?.statusLabel?.text = "Authorization Failed"
+              }
+          }
+      }
+        
   
         //MARK: patching table view delegate and data source...
-        mainScreen.tableViewChats.delegate = self
-        mainScreen.tableViewChats.dataSource = self
+        //mainScreen.tableViewChats.delegate = self
+        //mainScreen.tableViewChats.dataSource = self
         
         
         //MARK: removing the separator line...
-        mainScreen.tableViewChats.separatorStyle = .none
+        //mainScreen.tableViewChats.separatorStyle = .none
         
         //MARK: Make the titles look large...
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -115,6 +141,7 @@ class ViewController: UIViewController {
             object: nil)
         
     }
+    
     
     @objc func notificationReceivedForChatRecipientSelection(notification: Notification){
         // update all users as double check
@@ -261,10 +288,10 @@ class ViewController: UIViewController {
 
     // push to chat screen with chat ID
     func navigateToChat(chatID: String, recipientName: String) {
-        let chatViewController = ChatViewController()
-        chatViewController.chatID = chatID
-        chatViewController.messagingContact = recipientName
-        self.navigationController?.pushViewController(chatViewController, animated: true)
+//        let chatViewController = ChatViewController()
+//        chatViewController.chatID = chatID
+//        chatViewController.messagingContact = recipientName
+//        self.navigationController?.pushViewController(chatViewController, animated: true)
     }
     
     // fetch all message chains (only most recently sent message)
@@ -315,7 +342,7 @@ class ViewController: UIViewController {
                     }
 
                     DispatchQueue.main.async {
-                        self.mainScreen.tableViewChats.reloadData()
+                        //self.mainScreen.tableViewChats.reloadData()
                     }
                 }
             }
@@ -377,5 +404,3 @@ class ViewController: UIViewController {
         return dateFormatter.string(from: date)
     }
 }
-
-
