@@ -167,21 +167,39 @@ extension RegisterViewController{
             valid_results[2] = validatePassword(password: password)
             valid_results[3] = validateConfirmPassword(confirmPassword: confirmPassword, password: password)
             
-            //Validations....
-            
-            Auth.auth().createUser(withEmail: email, password: password, completion: {result, error in
-                if error == nil{
-                    //MARK: the user creation is successful...
-                    let contact = Contact(name: name, email: email)
-                    self.saveContactToFireStore(contact: contact)
-                    self.setNameOfTheUserInFirebaseAuth(name: name)
-                    // add details to FireStore (name, email) -> NOT PASSWORD
-                    
-                }else{
-                    //MARK: there is a error creating the user...
-                    print("Error creating the user")
-                }
-            })
+            // Check if email already exists in Firestore
+               let db = Firestore.firestore()
+               let collectionRef = db.collection("users")
+               
+               collectionRef.document(email).getDocument { (document, error) in
+                   if let error = error {
+                       print("Error checking email existence: \(error.localizedDescription)")
+                       self.hideActivityIndicator()
+                       return
+                   }
+                   
+                   if let document = document, document.exists {
+                       print("Email already exists")
+                       self.hideActivityIndicator()
+                       return
+                   }
+                   
+                   // Proceed with Firebase Authentication
+                   Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                       if let error = error {
+                           print("Error creating user: \(error.localizedDescription)")
+                           self.hideActivityIndicator()
+                           return
+                       }
+                       
+                       // Save user details to Firestore
+                       let contact = Contact(name: name, email: email)
+                       self.saveContactToFireStore(contact: contact)
+                       self.setNameOfTheUserInFirebaseAuth(name: name)
+                       self.hideActivityIndicator()
+                       print("User registered successfully")
+                   }
+               }
         }
     }
         
@@ -216,13 +234,13 @@ extension RegisterViewController{
             
             collectionUsers.setData([
                    "name": contact.name,
-                   "email": contact.email
+                   "wins": 0,
+                   "loses": 0,
+                   "Competition_ID" : "None",
+                   "steps": 0
                ])
             
-            let chatsCollectionRef = collectionUsers.collection("chats")
-            chatsCollectionRef.document("placeholder").setData([
-                "chatID:": "CFws1H5hqkaAPqe9n80A"
-                    ])
+        
       
         }
     

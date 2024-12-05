@@ -26,7 +26,7 @@ class CreateChallengeView: UIView {
         
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        backgroundColor = UIColor(red: 0.8, green: 1.0, blue: 0.8, alpha: 1.0)
         
         // New call functions -------------------------------------
         setupLabelCreateChallenge()
