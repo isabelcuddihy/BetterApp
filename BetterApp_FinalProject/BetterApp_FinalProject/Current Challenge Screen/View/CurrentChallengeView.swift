@@ -23,11 +23,14 @@ class CurrentChallengeView: UIView {
     
     
     
-    //Current Challenge Rules
-    var currentChallengeRules: UIView!
+    //Current Challenge
+    
     var labelDaysLeft: UILabel!
     var labelTotalStepsLeftForToday: UILabel!
+    var labelBatteryTopper: UILabel!
     var labelMetDailyGoal:  UILabel!
+    let labelWidth: CGFloat = 200
+    let labelHeight: CGFloat = 80
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,7 +48,7 @@ class CurrentChallengeView: UIView {
         
         
         // Load Challenge Rules
-        setupCurrentChallengeRules()
+        setupBatteryTopper()
         setupLabelDaysLeft()
         setupLabelTotalStepsLeftForToday()
         setupLabelMetDailyGoal()
@@ -114,51 +117,61 @@ class CurrentChallengeView: UIView {
         self.addSubview(labelChallengerName)
     }
     
-    func setupCurrentChallengeRules(){
-        currentChallengeRules = UIView()
-        currentChallengeRules.backgroundColor = .systemGreen
-        currentChallengeRules.layer.borderColor = UIColor.black.cgColor
-        currentChallengeRules.layer.borderWidth = 2
-        currentChallengeRules.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(currentChallengeRules)
+    func setupBatteryTopper(){
+        labelBatteryTopper = UILabel()
+        labelBatteryTopper.backgroundColor = .systemGreen
+        labelBatteryTopper.textAlignment = .center
+        labelBatteryTopper.layer.cornerRadius = 8
+        labelBatteryTopper.layer.masksToBounds = true
+        labelBatteryTopper.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(labelBatteryTopper)
     }
-    
-    func setupLabelDaysLeft(){
+    func setupLabelDaysLeft() {
         labelDaysLeft = UILabel()
         labelDaysLeft.font = .boldSystemFont(ofSize: 16)
-        labelDaysLeft.text = "Remaining Days in Challenge: 0"
-        labelDaysLeft.layer.borderWidth = 10
-        labelDaysLeft.layer.borderColor = UIColor.green.cgColor
+        labelDaysLeft.text = "Remaining Days: 0"
+        labelDaysLeft.textColor = .black
+        labelDaysLeft.backgroundColor = .systemGreen
+        labelDaysLeft.textAlignment = .center
+        labelDaysLeft.layer.cornerRadius = 8
+        labelDaysLeft.layer.masksToBounds = true
         labelDaysLeft.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelDaysLeft)
-        
     }
-    
-    
-    func setupLabelTotalStepsLeftForToday(){
+
+    func setupLabelTotalStepsLeftForToday() {
         labelTotalStepsLeftForToday = UILabel()
         labelTotalStepsLeftForToday.font = .boldSystemFont(ofSize: 16)
-        labelTotalStepsLeftForToday.text = "Remaining Steps in Day: 0"
-        labelTotalStepsLeftForToday.layer.borderColor = UIColor.green.cgColor
-        labelTotalStepsLeftForToday.layer.borderWidth = 10
+        labelTotalStepsLeftForToday.text = "Remaining Steps: 0"
+        labelTotalStepsLeftForToday.textColor = .black
+        labelTotalStepsLeftForToday.backgroundColor = .systemGreen
+        labelTotalStepsLeftForToday.textAlignment = .center
+        labelTotalStepsLeftForToday.layer.cornerRadius = 8
+        labelTotalStepsLeftForToday.layer.masksToBounds = true
         labelTotalStepsLeftForToday.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelTotalStepsLeftForToday)
     }
-    
-    func setupLabelMetDailyGoal(){
+
+    func setupLabelMetDailyGoal() {
         labelMetDailyGoal = UILabel()
         labelMetDailyGoal.font = .boldSystemFont(ofSize: 16)
-        labelMetDailyGoal.text = "GOAL NOT MET...KEEP GOING!"
-        labelMetDailyGoal.textColor = .red
-        labelMetDailyGoal.layer.borderWidth = 10
-        labelMetDailyGoal.layer.borderColor = UIColor.red.cgColor
+        labelMetDailyGoal.text = "KEEP GOING!" // change to GOAL MET when you reach the step count
+        labelMetDailyGoal.textColor = .black
+        labelMetDailyGoal.backgroundColor = .systemGreen
+        labelMetDailyGoal.textAlignment = .center
+        labelMetDailyGoal.layer.cornerRadius = 8
+        labelMetDailyGoal.layer.masksToBounds = true
         labelMetDailyGoal.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelMetDailyGoal)
     }
+
     
     //MARK: setting up constraints...
-    func initConstraints(){
+    func initConstraints() {
+        
+
         NSLayoutConstraint.activate([
+            // User profile constraints
             userProfilePic.widthAnchor.constraint(equalToConstant: 32),
             userProfilePic.heightAnchor.constraint(equalToConstant: 32),
             userProfilePic.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 8),
@@ -169,10 +182,8 @@ class CurrentChallengeView: UIView {
             challengerProfilePic.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 8),
             challengerProfilePic.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: 80),
             
-            
             labelUserName.topAnchor.constraint(equalTo: userProfilePic.bottomAnchor, constant: 8),
             labelUserName.centerXAnchor.constraint(equalTo: userProfilePic.centerXAnchor),
-            
             
             labelChallengerName.topAnchor.constraint(equalTo: challengerProfilePic.bottomAnchor, constant: 8),
             labelChallengerName.centerXAnchor.constraint(equalTo: challengerProfilePic.centerXAnchor),
@@ -180,24 +191,34 @@ class CurrentChallengeView: UIView {
             labelUserStepScore.topAnchor.constraint(equalTo: labelUserName.bottomAnchor, constant: 16),
             labelUserStepScore.centerXAnchor.constraint(equalTo: labelUserName.centerXAnchor),
             
-            
             labelChallengerStepScore.topAnchor.constraint(equalTo: labelChallengerName.bottomAnchor, constant: 16),
             labelChallengerStepScore.centerXAnchor.constraint(equalTo: labelChallengerName.centerXAnchor),
-
+           
+            // Challenge rules
             
-            labelDaysLeft.topAnchor.constraint(equalTo: labelChallengerStepScore.topAnchor, constant: 50),
+            labelBatteryTopper.topAnchor.constraint(equalTo: labelChallengerStepScore.bottomAnchor, constant: 50),
+            labelBatteryTopper.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            labelBatteryTopper.widthAnchor.constraint(equalToConstant: 80),
+            labelBatteryTopper.heightAnchor.constraint(equalToConstant: 60),
+            
+            
+            labelDaysLeft.topAnchor.constraint(equalTo: labelBatteryTopper.bottomAnchor, constant: 16),
             labelDaysLeft.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            labelDaysLeft.widthAnchor.constraint(equalToConstant: 16),
-            labelDaysLeft.heightAnchor.constraint(equalToConstant: 16),
-            
+            labelDaysLeft.widthAnchor.constraint(equalToConstant: labelWidth),
+            labelDaysLeft.heightAnchor.constraint(equalToConstant: labelHeight),
+
             labelTotalStepsLeftForToday.topAnchor.constraint(equalTo: labelDaysLeft.bottomAnchor, constant: 16),
             labelTotalStepsLeftForToday.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            
+            labelTotalStepsLeftForToday.widthAnchor.constraint(equalToConstant: labelWidth),
+            labelTotalStepsLeftForToday.heightAnchor.constraint(equalToConstant: labelHeight),
+
             labelMetDailyGoal.topAnchor.constraint(equalTo: labelTotalStepsLeftForToday.bottomAnchor, constant: 16),
             labelMetDailyGoal.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            
+            labelMetDailyGoal.widthAnchor.constraint(equalToConstant: labelWidth),
+            labelMetDailyGoal.heightAnchor.constraint(equalToConstant: labelHeight),
         ])
     }
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
