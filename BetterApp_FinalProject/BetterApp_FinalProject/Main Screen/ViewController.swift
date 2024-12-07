@@ -61,7 +61,7 @@ class ViewController: UIViewController {
                 self.mainScreen.labelText.text = "Welcome \(user?.displayName ?? "Anonymous")!"
                 self.mainScreen.floatingButtonAddChat.isEnabled = true
                 self.mainScreen.floatingButtonAddChat.isHidden = false
-                self.searchChatContactController.userName =  user?.displayName ?? "Anonymous"
+                self.searchChatContactController.userToChallengeName =  user?.displayName ?? "Anonymous"
                 
                 let createChallengeViewController = CreateChallengeController()
                                 
@@ -111,7 +111,7 @@ class ViewController: UIViewController {
         
         notificationCenter.addObserver(
             self, selector: #selector(notificationReceivedForChatRecipientSelection(notification:)),
-            name: .NewChatSelected,
+            name: .NewChallangerSelected,
             object: nil)
         notificationCenter.addObserver(
             self, selector: #selector(notificationReceivedForNewChatsSent(notification:)),

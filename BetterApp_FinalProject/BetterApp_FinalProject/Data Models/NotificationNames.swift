@@ -1,4 +1,4 @@
-//
+ //
 //  NotificationNames.swift
 //  BetterApp_FinalProject
 //
@@ -7,7 +7,10 @@
 
 import Foundation
 extension Notification.Name{
-    static let NewChatSelected = Notification.Name("NewChatSelected") // notifies to refresh all notes table
+    
+    static let NewChallangerSelected = Notification.Name("NewChallangerSelected")
+    
+    // notifies to refresh all notes table
     static let NewChatAdded = Notification.Name("NewChatAdded") // notifies to refresh all notes table
 
 }
