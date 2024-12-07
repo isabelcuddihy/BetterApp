@@ -34,8 +34,9 @@ class HealthManager {
             return
             
         }
-        // Requesting access to read/write the data of specific HealthKit data types (like steps) in our case
-        healthStore.requestAuthorization(toShare: allHealthDataTypes, read: allHealthDataTypes) {success, error in
+        // Requesting access to read the data of specific HealthKit data types (like steps) in our case
+        //toShare is nil because we are not writing any data from this app to apple health kit
+        healthStore.requestAuthorization(toShare: nil, read: allHealthDataTypes) {success, error in
             // Check if an error occurred during the request
             if let error = error {
                 // Print the error message for debugging
@@ -69,11 +70,12 @@ class HealthManager {
     }
     
     /**
+     WE ARE NOT WRITING TO APPLE HEALTH FROM THIS APP---> DO NOT USE THIS FUNCITON
      Function to create and save a sample of Step count data to HealthKit.
      - Parameters:
         - dataType: The type of data to check authorization for.
      - Returns: The authorization status.
-    */
+    
     func saveStepCount() {
         // Define the step count type
         guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
@@ -102,4 +104,5 @@ class HealthManager {
             }
         }
     }
+     */
 }

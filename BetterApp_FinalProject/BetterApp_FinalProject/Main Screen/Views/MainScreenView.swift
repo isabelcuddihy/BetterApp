@@ -16,7 +16,7 @@ class MainScreenView: UIView {
     var labelPersonalDetails: UILabel!
     var profilePic: UIImageView!
     var labelText: UILabel!
-    var floatingButtonAddChat: UIButton!
+    var buttonCompetition: UIButton!
     var detailsContainerView: UIView! // UI element for details container
     var stackView : UIStackView!
     
@@ -27,22 +27,22 @@ class MainScreenView: UIView {
         
         setupProfilePic()
         setupLabelText()
-        // 11/24 - Adding in UI elements for Better App Main Screen. Soni
-        setupLabelCompetitionID()
         setupLabelWins()
         setupLabelLosses()
-        setupLabelPersonalDetails()
-        setupFloatingButtonAddChat()
-        setupDetailsContainerView()
+
+        setupButtonCompetition()
+       
         initConstraints()
     }
     
+
+
     //MARK: initializing the UI elements...
     func setupProfilePic(){
         profilePic = UIImageView()
         profilePic.image = UIImage(systemName: "person.circle")?.withRenderingMode(.alwaysOriginal)
-        // Changing it to green
-        profilePic.tintColor = .systemGreen
+        // Default Symbol is Green
+        profilePic.tintColor = .green
         profilePic.contentMode = .scaleToFill
         profilePic.clipsToBounds = true
         profilePic.layer.masksToBounds = true
@@ -50,106 +50,97 @@ class MainScreenView: UIView {
         self.addSubview(profilePic)
     }
     
-    func setupDetailsContainerView() {
-        // Creating the container view for personal details
-        detailsContainerView = UIView()
-        detailsContainerView.backgroundColor = .green
-        detailsContainerView.layer.masksToBounds = true
-        // Round the corners
-        detailsContainerView.layer.cornerRadius = 18
-        detailsContainerView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(detailsContainerView)
-
-        
-        // Creating the stack view to hold the labels
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.spacing = 6
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        detailsContainerView.addSubview(stackView)
-    
-        
-        // Add the labels to the stack view
-        stackView.addArrangedSubview(labelPersonalDetails)
-        stackView.addArrangedSubview(labelCompetitionID)
-        stackView.addArrangedSubview(labelWins)
-        stackView.addArrangedSubview(labelLosses)
-
-        // Set constraints for details container view and stack view
-        NSLayoutConstraint.activate([
-            // Details container constraints (size and position)
-            detailsContainerView.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 20),
-            detailsContainerView.widthAnchor.constraint(equalToConstant: 50),
-            detailsContainerView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            detailsContainerView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            
-            // Stack View Constraints (padding and centering)
-            stackView.topAnchor.constraint(equalTo: detailsContainerView.topAnchor, constant: 8),
-            stackView.leadingAnchor.constraint(equalTo: detailsContainerView.leadingAnchor, constant: 8),
-            stackView.trailingAnchor.constraint(equalTo: detailsContainerView.trailingAnchor, constant: -8),
-            stackView.bottomAnchor.constraint(equalTo: detailsContainerView.bottomAnchor, constant: -8),
-        ])
-          
-    }
-    
- 
-    
     func setupLabelText(){
         labelText = UILabel()
+        labelText.text = "Profile"
         labelText.font = .boldSystemFont(ofSize: 14)
+        labelText.textColor = .black
+        labelText.isHidden = false
         labelText.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelText)
     }
     
-    func setupLabelPersonalDetails(){
-        labelPersonalDetails = UILabel()
-        labelPersonalDetails.text = "Personal Details"
-        labelPersonalDetails.font = .boldSystemFont(ofSize: 18)
-        labelPersonalDetails.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(labelPersonalDetails)
-    }
-
-    
-    func setupLabelCompetitionID(){
-        labelCompetitionID = UILabel()
-        labelCompetitionID.text = "Current Competition: User1VSUser2" //dummy text data
-        labelCompetitionID.font = .boldSystemFont(ofSize: 14)
-        labelCompetitionID.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(labelCompetitionID)
-    }
-    
     func setupLabelWins(){
         labelWins = UILabel()
-        labelWins.text = "Wins: 5" //dummy text data
+        //Text
+        labelWins.text = "Wins: 0 "
         labelWins.font = .boldSystemFont(ofSize: 14)
+        labelWins.textColor = .black
+        labelWins.textAlignment = .center
+        
+        //background color
+        labelWins.backgroundColor = .green
+        
+        //Rounded Corners
+        labelWins.layer.cornerRadius = 16
+        
+        //Borders
+        labelWins.layer.borderColor = UIColor.darkGray.cgColor
+        labelWins.layer.borderWidth = 2
+        
+        //Keep to same size
+        labelWins.layer.masksToBounds = true
+        
+        //Hide until user is logged in
+        labelWins.isHidden = true
+        
         labelWins.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelWins)
     }
     
     func setupLabelLosses(){
         labelLosses = UILabel()
-        labelLosses.text = "Losses: 0" //dummy text data
+        //text
+        labelLosses.text = "Losses: 0"
         labelLosses.font = .boldSystemFont(ofSize: 14)
+        labelLosses.textColor = .black
+        labelLosses.textAlignment = .center
+        
+        //background color
+        labelLosses.backgroundColor = .green
+        
+        //Rounded corners
+        labelLosses.layer.cornerRadius = 16
+        
+        //Border
+        labelLosses.layer.borderColor = UIColor.darkGray.cgColor
+        labelLosses.layer.borderWidth = 2
+        
+        //Keep to proper size
+        labelLosses.layer.masksToBounds = true
+        
+        //Hide until user is logged in
+        labelLosses.isHidden = true
         labelLosses.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelLosses)
     }
     
     
-    func setupFloatingButtonAddChat(){
-        floatingButtonAddChat = UIButton(type: .system)
-        floatingButtonAddChat.setTitle("", for: .normal)
-        floatingButtonAddChat.setImage(UIImage(systemName: "plus.message.fill")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        floatingButtonAddChat.contentHorizontalAlignment = .fill
-        floatingButtonAddChat.contentVerticalAlignment = .fill
-        floatingButtonAddChat.imageView?.contentMode = .scaleAspectFit
-        floatingButtonAddChat.layer.cornerRadius = 16
-        floatingButtonAddChat.imageView?.layer.shadowOffset = .zero
-        floatingButtonAddChat.imageView?.layer.shadowRadius = 0.8
-        floatingButtonAddChat.imageView?.layer.shadowOpacity = 0.7
-        floatingButtonAddChat.imageView?.clipsToBounds = true
-        floatingButtonAddChat.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(floatingButtonAddChat)
+    func setupButtonCompetition(){
+        buttonCompetition = UIButton(type: .system)
+        //text for button
+        buttonCompetition.setTitle("Create Challenge", for: .normal)
+        buttonCompetition.contentVerticalAlignment = .center
+        buttonCompetition.contentHorizontalAlignment = .center
+        buttonCompetition.titleLabel?.adjustsFontSizeToFitWidth = true
+        buttonCompetition.setTitleColor(UIColor.black, for: .normal)
+        //image on button
+        buttonCompetition.setImage(UIImage(systemName: "bolt.heart")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        buttonCompetition.tintColor = .white
+        buttonCompetition.imageView?.contentMode = .scaleAspectFit
+        buttonCompetition.imageView?.layer.shadowOffset = .zero
+        buttonCompetition.imageView?.layer.shadowRadius = 1
+        buttonCompetition.imageView?.layer.shadowOpacity = 1
+        buttonCompetition.imageView?.clipsToBounds = true
+        
+        //Button background and border
+        buttonCompetition.layer.cornerRadius = 16
+        buttonCompetition.backgroundColor = .systemRed
+        buttonCompetition.layer.borderColor = UIColor.darkGray.cgColor
+        buttonCompetition.layer.borderWidth = 2
+        
+        buttonCompetition.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(buttonCompetition)
     }
     
   
@@ -158,26 +149,34 @@ class MainScreenView: UIView {
     //MARK: setting up constraints...
     func initConstraints(){
         NSLayoutConstraint.activate([
+            
+            labelText.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 16),
+            labelText.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
+       
+            
             profilePic.widthAnchor.constraint(equalToConstant: 100),
             profilePic.heightAnchor.constraint(equalToConstant: 100),
             profilePic.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             profilePic.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 40),
-            
-            labelText.topAnchor.constraint(equalTo: profilePic.topAnchor, constant: -20),
-            labelText.centerXAnchor.constraint(equalTo: profilePic.centerXAnchor),
-            
-            
-            // Details container
-            detailsContainerView.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 20),
-            detailsContainerView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            detailsContainerView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
 
             
+            labelWins.topAnchor.constraint(equalTo: profilePic.bottomAnchor, constant: 16),
+            labelWins.centerXAnchor.constraint(equalTo: profilePic.centerXAnchor),
+            labelWins.widthAnchor.constraint(equalToConstant: 200),
+            labelWins.heightAnchor.constraint(equalToConstant: 80),
+            
+            labelLosses.topAnchor.constraint(equalTo: labelWins.bottomAnchor, constant: 16),
+            labelLosses.centerXAnchor.constraint(equalTo: labelWins.centerXAnchor),
+            labelLosses.widthAnchor.constraint(equalToConstant: 200),
+            labelLosses.heightAnchor.constraint(equalToConstant: 80),
+            
+         
             // Floating Action Button
-            floatingButtonAddChat.widthAnchor.constraint(equalToConstant: 48),
-            floatingButtonAddChat.heightAnchor.constraint(equalToConstant: 48),
-            floatingButtonAddChat.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            floatingButtonAddChat.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            buttonCompetition.widthAnchor.constraint(equalToConstant: 200),
+            buttonCompetition.heightAnchor.constraint(equalToConstant: 80),
+            buttonCompetition.topAnchor.constraint(equalTo: labelLosses.bottomAnchor, constant: 16),
+            buttonCompetition.centerXAnchor.constraint(equalTo: labelLosses.centerXAnchor),
+            
         ])
     }
     
