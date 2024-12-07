@@ -71,7 +71,7 @@ class CurrentChallengeView: UIView {
     
     func setupChallengerProfilePic(){
         challengerProfilePic = UIImageView()
-        challengerProfilePic.image = UIImage(systemName: "person.circle")?.withRenderingMode(.alwaysOriginal)
+        challengerProfilePic.image = UIImage(systemName: "person.circle.fill")?.withRenderingMode(.alwaysOriginal)
         challengerProfilePic.tintColor = .red
         challengerProfilePic.contentMode = .scaleToFill
         challengerProfilePic.clipsToBounds = true
@@ -119,9 +119,12 @@ class CurrentChallengeView: UIView {
     
     func setupBatteryTopper(){
         labelBatteryTopper = UILabel()
-        labelBatteryTopper.backgroundColor = .systemGreen
+        labelBatteryTopper.backgroundColor = .green
         labelBatteryTopper.textAlignment = .center
-        labelBatteryTopper.layer.cornerRadius = 8
+        labelBatteryTopper.layer.cornerRadius = 16
+        //Borders
+        labelBatteryTopper.layer.borderColor = UIColor.darkGray.cgColor
+        labelBatteryTopper.layer.borderWidth = 2
         labelBatteryTopper.layer.masksToBounds = true
         labelBatteryTopper.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelBatteryTopper)
@@ -129,11 +132,14 @@ class CurrentChallengeView: UIView {
     func setupLabelDaysLeft() {
         labelDaysLeft = UILabel()
         labelDaysLeft.font = .boldSystemFont(ofSize: 16)
-        labelDaysLeft.text = "Remaining Days: 0"
+        labelDaysLeft.text = "Time Left: 0"
         labelDaysLeft.textColor = .black
-        labelDaysLeft.backgroundColor = .systemGreen
+        labelDaysLeft.backgroundColor = .green
+        //Borders
+        labelDaysLeft.layer.borderColor = UIColor.darkGray.cgColor
+        labelDaysLeft.layer.borderWidth = 2
         labelDaysLeft.textAlignment = .center
-        labelDaysLeft.layer.cornerRadius = 8
+        labelDaysLeft.layer.cornerRadius = 16
         labelDaysLeft.layer.masksToBounds = true
         labelDaysLeft.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelDaysLeft)
@@ -144,9 +150,12 @@ class CurrentChallengeView: UIView {
         labelTotalStepsLeftForToday.font = .boldSystemFont(ofSize: 16)
         labelTotalStepsLeftForToday.text = "Remaining Steps: 0"
         labelTotalStepsLeftForToday.textColor = .black
-        labelTotalStepsLeftForToday.backgroundColor = .systemGreen
+        labelTotalStepsLeftForToday.backgroundColor = .green
         labelTotalStepsLeftForToday.textAlignment = .center
-        labelTotalStepsLeftForToday.layer.cornerRadius = 8
+        //Borders
+        labelTotalStepsLeftForToday.layer.borderColor = UIColor.darkGray.cgColor
+        labelTotalStepsLeftForToday.layer.borderWidth = 2
+        labelTotalStepsLeftForToday.layer.cornerRadius = 16
         labelTotalStepsLeftForToday.layer.masksToBounds = true
         labelTotalStepsLeftForToday.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(labelTotalStepsLeftForToday)
@@ -157,7 +166,10 @@ class CurrentChallengeView: UIView {
         labelMetDailyGoal.font = .boldSystemFont(ofSize: 16)
         labelMetDailyGoal.text = "KEEP GOING!" // change to GOAL MET when you reach the step count
         labelMetDailyGoal.textColor = .black
-        labelMetDailyGoal.backgroundColor = .systemGreen
+        //Borders
+        labelMetDailyGoal.layer.borderColor = UIColor.darkGray.cgColor
+        labelMetDailyGoal.layer.borderWidth = 2
+        labelMetDailyGoal.backgroundColor = .red
         labelMetDailyGoal.textAlignment = .center
         labelMetDailyGoal.layer.cornerRadius = 8
         labelMetDailyGoal.layer.masksToBounds = true
