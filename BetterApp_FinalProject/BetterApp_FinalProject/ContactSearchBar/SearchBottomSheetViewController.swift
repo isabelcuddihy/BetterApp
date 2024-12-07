@@ -94,11 +94,11 @@ extension SearchBottomSheetController: UITableViewDelegate, UITableViewDataSourc
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dataToSend = namesForTableView[indexPath.row]
-                NotificationCenter.default.post(name: .NewChatSelected, object: nil, userInfo: ["data": dataToSend])
-                self.dismiss(animated: true, completion: nil)
+       // let dataToSend = namesForTableView[indexPath.row]
+          //      NotificationCenter.default.post(name: .NewChallenge, object: nil, userInfo: ["data": dataToSend])
+           //     self.dismiss(animated: true, completion: nil)
         
-        navigationController?.popViewController(animated: true)
+       // navigationController?.popViewController(animated: true)
     }
 }
     

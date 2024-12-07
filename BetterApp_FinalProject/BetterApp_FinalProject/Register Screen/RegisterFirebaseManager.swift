@@ -234,6 +234,7 @@ extension RegisterViewController{
             
             collectionUsers.setData([
                    "name": contact.name,
+                   "email": contact.email,
                    "wins": 0,
                    "loses": 0,
                    "Competition_ID" : "None",

@@ -7,10 +7,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSHealthShareUsageDescription</key>
-	<string>This app needs access to your health data such as steps to provide personalized insights</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>This app writes health data to track your activity and progress</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

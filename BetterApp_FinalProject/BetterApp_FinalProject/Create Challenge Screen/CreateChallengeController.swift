@@ -33,7 +33,7 @@ class CreateChallengeController: UIViewController {
         createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onChooseFriendButtonTapped), for: .touchUpInside)
         
         // Request authorization when the view loads
-        requestHealthKitAuthorization()
+        //requestHealthKitAuthorization()
         
         print("this statement is printed after view is loaded")
 //        
@@ -80,58 +80,5 @@ class CreateChallengeController: UIViewController {
 //        print("onChooseFriendButtonTapped")
 //    }
     
-    
-    // Request HealthKit authorization
-    func requestHealthKitAuthorization() {
-        guard let stepType = HKObjectType.quantityType(forIdentifier: .stepCount) else {
-            print("Step Count unavailable.")
-            return
-        }
-        
-        let readTypes: Set<HKObjectType> = [stepType]
-        
-        // Request permission from the user
-        healthStore.requestAuthorization(toShare: nil, read: readTypes) { success, error in
-            if success {
-                print("HealthKit authorization granted.")
-                // Fetch steps for the last day once authorized
-                self.fetchStepsForLastDay()
-            } else {
-                print("HealthKit authorization failed: \(error?.localizedDescription ?? "Unknown error")")
-            }
-        }
-    }
-    
-    // Fetch and print steps for the last day
-    func fetchStepsForLastDay() {
-        // TODO: Q: Ask team how is this line know how to access the step data"? what is it doing?
-        guard let stepType = HKObjectType.quantityType(forIdentifier: .stepCount) else {
-            print("Step Count type is unavailable.")
-            return
-        }
-        
-        // Define the start and end date for the last day
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Date()
-        
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-            if let error = error {
-                print("Error fetching steps: \(error.localizedDescription)")
-                return
-            }
-            
-            if let sum = result?.sumQuantity() {
-                let steps = sum.doubleValue(for: HKUnit.count())
-                print("Total steps in the last day: \(Int(steps))")
-            } else {
-                print("No steps data found for the last day.")
-            }
-        }
-        
-        // Execute the query
-        healthStore.execute(query)
-        
-        
-    }
+   
 }
