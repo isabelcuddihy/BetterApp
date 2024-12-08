@@ -13,6 +13,8 @@ class CreateChallengeView: UIView {
     
     var buttonChooseFriend: UIButton!
     
+    var labelFriendName: UILabel!
+    
     var labelDays: UILabel!
     
     var buttonSelectDays: UIButton!
@@ -32,6 +34,8 @@ class CreateChallengeView: UIView {
         setupLabelCreateChallenge()
         
         setupButtonChooseFriend()
+        
+        setupLabelFriendName()
 
         setupLabelDays()
         
@@ -66,6 +70,14 @@ class CreateChallengeView: UIView {
         buttonChooseFriend.layer.cornerRadius = 4
         buttonChooseFriend.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(buttonChooseFriend)
+    }
+    
+    func setupLabelFriendName() {
+        labelFriendName = UILabel()
+        labelFriendName.text = ""
+        labelFriendName.font = UIFont.boldSystemFont(ofSize: 18)
+        labelFriendName.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(labelFriendName)
     }
     
     func setupLabelDays() {
@@ -121,15 +133,14 @@ class CreateChallengeView: UIView {
         NSLayoutConstraint.activate([
             labelCreateChallenge.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 24),
             labelCreateChallenge.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
+           
             
-            buttonChooseFriend.topAnchor.constraint(equalTo: labelCreateChallenge.bottomAnchor, constant: 36),
-            buttonChooseFriend.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
-            
-            labelDays.centerYAnchor.constraint(equalTo: buttonSelectDays.centerYAnchor),
+            labelDays.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
+            labelDays.topAnchor.constraint(equalTo: labelCreateChallenge.bottomAnchor, constant: 16),
             labelDays.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 96),
             
-            buttonSelectDays.topAnchor.constraint(equalTo: buttonChooseFriend.bottomAnchor, constant: 24),
-            buttonSelectDays.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -96),
+            buttonSelectDays.centerYAnchor.constraint(equalTo: self.labelDays.centerYAnchor),
+            buttonSelectDays.leadingAnchor.constraint(equalTo: self.labelDays.trailingAnchor, constant: -16),
             
             labelSteps.topAnchor.constraint(equalTo: labelDays.bottomAnchor, constant: 36),
             labelSteps.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
@@ -138,7 +149,13 @@ class CreateChallengeView: UIView {
             textFieldSteps.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 96),
             textFieldSteps.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -96),
             
-            buttonChallenge.topAnchor.constraint(equalTo: textFieldSteps.bottomAnchor, constant: 36),
+            buttonChooseFriend.topAnchor.constraint(equalTo: textFieldSteps.bottomAnchor, constant: 36),
+            buttonChooseFriend.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
+            
+            labelFriendName.topAnchor.constraint(equalTo: buttonChooseFriend.bottomAnchor, constant: 16),
+            labelFriendName.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
+            
+            buttonChallenge.topAnchor.constraint(equalTo: labelFriendName.bottomAnchor, constant: 36),
             buttonChallenge.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
 
         ])

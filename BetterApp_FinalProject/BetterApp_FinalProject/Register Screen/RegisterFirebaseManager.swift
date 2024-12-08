@@ -57,6 +57,19 @@ extension RegisterViewController{
         
         self.present(alert, animated: true)
     }
+    
+    // Mark: Error  email alert ...
+    func showErrorAlertEmailAlreadyExists(){
+        let alert = UIAlertController(
+            title: "Error!", message: "Email is already registered",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        self.present(alert, animated: true)
+    }
+    
     func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{3,64}"
         
@@ -179,7 +192,7 @@ extension RegisterViewController{
                    }
                    
                    if let document = document, document.exists {
-                       print("Email already exists")
+                       self.showErrorAlertEmailAlreadyExists()
                        self.hideActivityIndicator()
                        return
                    }

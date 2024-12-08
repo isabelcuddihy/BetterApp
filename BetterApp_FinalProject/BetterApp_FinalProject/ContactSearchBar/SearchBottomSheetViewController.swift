@@ -4,11 +4,11 @@
 //
 //  Created by Isabel Cuddihy on 11/18/24.
 //
-
+ 
 import UIKit
 import FirebaseFirestore
 import FirebaseAuth
-
+ 
 class SearchBottomSheetController: UIViewController {
     
     
@@ -19,11 +19,25 @@ class SearchBottomSheetController: UIViewController {
     var currentUser:FirebaseAuth.User?
     //MARK: the array to display the table view...
     var namesForTableView = [String]()
-    var userName = ""
+    var userToChallengeName = "" // selected user to message
+    
+    
+    
+    var potentialContacts: [String: String] = [:] // all potential contacts as name:email -> key value meil pair
+    
+    // notification center to grab name + ottehr important data
+    let notificationCenter = NotificationCenter.default
+    
+    
     
     
     override func loadView() {
         view = searchSheet
+        //        self.getAllUsers(completion: ([String]?, Error?) -> Void)
+        //        print(potentialContacts)
+        
+        
+        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,8 +48,6 @@ class SearchBottomSheetController: UIViewController {
         searchSheet.tableViewSearchResults.delegate = self
         searchSheet.tableViewSearchResults.dataSource = self
         
-        //MARK: setting up Search Bar delegate...
-        searchSheet.searchBar.delegate = self
         
         //MARK: initializing the array for the table view with all the names...
         namesForTableView = namesDatabase
@@ -73,11 +85,11 @@ class SearchBottomSheetController: UIViewController {
                     self.searchSheet.tableViewSearchResults.reloadData()
                 }
             })
+        print(namesDatabase)
     }
     
+    
 }
-
-
     
     //MARK: adopting Table View protocols...
 extension SearchBottomSheetController: UITableViewDelegate, UITableViewDataSource{
@@ -94,29 +106,15 @@ extension SearchBottomSheetController: UITableViewDelegate, UITableViewDataSourc
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // let dataToSend = namesForTableView[indexPath.row]
-          //      NotificationCenter.default.post(name: .NewChallenge, object: nil, userInfo: ["data": dataToSend])
-           //     self.dismiss(animated: true, completion: nil)
+        let dataToSend = namesForTableView[indexPath.row]
+        print(dataToSend)
+                NotificationCenter.default.post(name: .NewChallengerSelected, object: nil, userInfo: ["data": dataToSend])
+                self.dismiss(animated: true, completion: nil)
         
-       // navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
     }
 }
-    
-    //MARK: adopting the search bar protocol...
-    extension SearchBottomSheetController: UISearchBarDelegate{
-        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            if searchText == ""{
-                namesForTableView = namesDatabase
-            }else{
-                self.namesForTableView.removeAll()
-                
-                for name in namesDatabase{
-                    namesForTableView = namesDatabase.filter { $0.localizedCaseInsensitiveContains(searchText) }
-                }
-            }
-            self.searchSheet.tableViewSearchResults.reloadData()
-        }
-        
-        
-    }
 
+
+
+  
