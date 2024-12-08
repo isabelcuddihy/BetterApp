@@ -4,14 +4,16 @@
 //
 //  Created by Haidar Halawi on 11/21/24.
 //
-
+ 
 import UIKit
-
+ 
 class CreateChallengeView: UIView {
     
     var labelCreateChallenge: UILabel!
     
     var buttonChooseFriend: UIButton!
+    
+    var labelFriendName: UILabel!
     
     var labelDays: UILabel!
     
@@ -22,7 +24,7 @@ class CreateChallengeView: UIView {
     var textFieldSteps: UITextField!
     
     var buttonChallenge: UIButton!
-
+ 
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,7 +34,9 @@ class CreateChallengeView: UIView {
         setupLabelCreateChallenge()
         
         setupButtonChooseFriend()
-
+        
+        setupLabelFriendName()
+ 
         setupLabelDays()
         
         setupButtonSelectDays()
@@ -42,7 +46,7 @@ class CreateChallengeView: UIView {
         setupTextFieldSteps()
         
         setupButtonChallenge()
-
+ 
         initConstraints()
     
     }
@@ -57,15 +61,23 @@ class CreateChallengeView: UIView {
     
     func setupButtonChooseFriend(){
         buttonChooseFriend = UIButton(type: .system)
-        buttonChooseFriend.setTitle("Choose Friend", for: .normal)
+        buttonChooseFriend.setTitle("  Choose Friend  ", for: .normal)
         buttonChooseFriend.backgroundColor = UIColor.systemBlue
         buttonChooseFriend.setTitleColor(.white, for: .normal)
         buttonChooseFriend.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         buttonChooseFriend.layer.cornerRadius = 10
         buttonChooseFriend.clipsToBounds = true
-        buttonChooseFriend.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) // increase
+        buttonChooseFriend.layer.cornerRadius = 4
         buttonChooseFriend.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(buttonChooseFriend)
+    }
+    
+    func setupLabelFriendName() {
+        labelFriendName = UILabel()
+        labelFriendName.text = ""
+        labelFriendName.font = UIFont.boldSystemFont(ofSize: 18)
+        labelFriendName.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(labelFriendName)
     }
     
     func setupLabelDays() {
@@ -98,6 +110,7 @@ class CreateChallengeView: UIView {
         textFieldSteps.keyboardType = .emailAddress
         textFieldSteps.placeholder = "Type Steps Amount"
         textFieldSteps.borderStyle = .roundedRect
+        textFieldSteps.keyboardType = .numberPad
         textFieldSteps.font = .systemFont(ofSize: 18)
         textFieldSteps.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(textFieldSteps)
@@ -105,13 +118,13 @@ class CreateChallengeView: UIView {
     
     func setupButtonChallenge(){
         buttonChallenge = UIButton(type: .system)
-        buttonChallenge.setTitle("Challenge", for: .normal)
+        buttonChallenge.setTitle("  Challenge  ", for: .normal)
         buttonChallenge.backgroundColor = UIColor.systemBlue
         buttonChallenge.setTitleColor(.white, for: .normal)
         buttonChallenge.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         buttonChallenge.layer.cornerRadius = 10
         buttonChallenge.clipsToBounds = true
-        buttonChallenge.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) // increase
+        buttonChallenge.layer.cornerRadius = 4
         buttonChallenge.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(buttonChallenge)
     }
@@ -121,8 +134,14 @@ class CreateChallengeView: UIView {
             labelCreateChallenge.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 24),
             labelCreateChallenge.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
             
-            buttonChooseFriend.topAnchor.constraint(equalTo: labelCreateChallenge.bottomAnchor, constant: 36),
+            labelFriendName.topAnchor.constraint(equalTo: labelCreateChallenge.bottomAnchor, constant: 36),
+            labelFriendName.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
+            
+            
+            buttonChooseFriend.topAnchor.constraint(equalTo: labelFriendName.bottomAnchor, constant: 36),
             buttonChooseFriend.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
+            
+
             
             labelDays.centerYAnchor.constraint(equalTo: buttonSelectDays.centerYAnchor),
             labelDays.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: 96),
@@ -139,16 +158,16 @@ class CreateChallengeView: UIView {
             
             buttonChallenge.topAnchor.constraint(equalTo: textFieldSteps.bottomAnchor, constant: 36),
             buttonChallenge.centerXAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerXAnchor),
-
+ 
         ])
     }
     
     
     
-
+ 
     //MARK: unused methods...
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+ 
 }
