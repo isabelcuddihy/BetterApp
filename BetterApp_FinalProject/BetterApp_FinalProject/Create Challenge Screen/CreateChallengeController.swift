@@ -112,7 +112,7 @@ class CreateChallengeController: UIViewController {
             }
             
             // key of persons name to get email (which is the value)
-            let userToChallengeEmail =                self.potentialContacts[self.userToChallengeName] // name:email
+            let userToChallengeEmail =  self.potentialContacts[self.userToChallengeName] // name:email
             
             // check if competition exists (for current user), else create one
             // getting pathway right now to curr user fields
@@ -148,8 +148,6 @@ class CreateChallengeController: UIViewController {
         }
     }
     
-  
-    
 
     // update all users via info from firestore (accounts for new registrations from different phones)
     func getAllUsers() {
@@ -176,6 +174,9 @@ class CreateChallengeController: UIViewController {
                 print(self.potentialContacts)
              
             }
+        }
+        else{
+            print("Login error")
         }
     }
     
