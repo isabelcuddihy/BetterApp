@@ -57,13 +57,13 @@ class CreateChallengeView: UIView {
     
     func setupButtonChooseFriend(){
         buttonChooseFriend = UIButton(type: .system)
-        buttonChooseFriend.setTitle("Choose Friend", for: .normal)
+        buttonChooseFriend.setTitle("  Choose Friend  ", for: .normal)
         buttonChooseFriend.backgroundColor = UIColor.systemBlue
         buttonChooseFriend.setTitleColor(.white, for: .normal)
         buttonChooseFriend.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         buttonChooseFriend.layer.cornerRadius = 10
         buttonChooseFriend.clipsToBounds = true
-        buttonChooseFriend.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) // increase
+        buttonChooseFriend.layer.cornerRadius = 4
         buttonChooseFriend.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(buttonChooseFriend)
     }
@@ -98,6 +98,7 @@ class CreateChallengeView: UIView {
         textFieldSteps.keyboardType = .emailAddress
         textFieldSteps.placeholder = "Type Steps Amount"
         textFieldSteps.borderStyle = .roundedRect
+        textFieldSteps.keyboardType = .numberPad
         textFieldSteps.font = .systemFont(ofSize: 18)
         textFieldSteps.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(textFieldSteps)
@@ -105,13 +106,13 @@ class CreateChallengeView: UIView {
     
     func setupButtonChallenge(){
         buttonChallenge = UIButton(type: .system)
-        buttonChallenge.setTitle("Challenge", for: .normal)
+        buttonChallenge.setTitle("  Challenge  ", for: .normal)
         buttonChallenge.backgroundColor = UIColor.systemBlue
         buttonChallenge.setTitleColor(.white, for: .normal)
         buttonChallenge.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         buttonChallenge.layer.cornerRadius = 10
         buttonChallenge.clipsToBounds = true
-        buttonChallenge.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) // increase
+        buttonChallenge.layer.cornerRadius = 4
         buttonChallenge.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(buttonChallenge)
     }
