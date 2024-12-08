@@ -30,17 +30,16 @@ class CreateChallengeController: UIViewController {
     let database = Firestore.firestore()
     
     var userToChallengeName = "" // selected user to message
+    
+    //Login Authorization for User
+    let currentUser = Auth.auth().currentUser
+    
 
 
     
     override func loadView() {
         view = createChallengeView
         
-        // test receiving name data from notification center (using observer to see if NewCHallengerSelected Notification is called)
-        notificationCenter.addObserver(
-            self, selector: #selector(notificationReceivedForNewChallengerSelected(notification:)),
-            name: .NewChallangerSelected,
-            object: nil)
     }
     
     override func viewDidLoad() {
@@ -55,9 +54,17 @@ class CreateChallengeController: UIViewController {
         requestHealthKitAuthorization()
         
         print("this statement is printed after view is loaded")
-//        
+        self.getAllUsers()
+//
 //        createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onChooseFriendButtonTapped), for: .touchUpInside)
 //        onChallengeButtonTapped
+        
+        // test receiving name data from notification center (using observer to see if NewCHallengerSelected Notification is called)
+        notificationCenter.addObserver(
+            self, selector: #selector(notificationReceivedForNewChallengerSelected(notification:)),
+            name: .NewChallangerSelected,
+            object: nil)
+
     }
     
     //MARK: menu for buttonSelectDays setup...
@@ -155,14 +162,6 @@ class CreateChallengeController: UIViewController {
     
     // This function serves to write data to database (both user names and chat IDs for now)
     @objc func notificationReceivedForNewChallengerSelected(notification: Notification){
-        // update all users as double check (get name:email key:value pairs
-        getAllUsers { names, error in
-            if let error = error {
-                print("Error fetching user names: \(error)")
-            } else {
-                print("Fetched names: \(names)")
-            }
-        }
         if let data = notification.userInfo?["data"] as? String {
             // data (name) recived of the person we want to talk to
             self.userToChallengeName = data
@@ -185,18 +184,17 @@ class CreateChallengeController: UIViewController {
                     // get competitionID
                     compID = document.get("Competition_ID") as? String ?? ""
                     
-                    if compID != "none" {
+                    if compID != "None" {
                         print("user \(self.userToChallengeName) is already in a competition")
                         return // Preview Alert User is in competition
                     } else {
                         // challenge doesn't exist, create a new one
                         print("Creating new conversation with \(self.userToChallengeName).")
                         
-                        //                    // key of persons name to get email (which is the value)
-                        //                    let recipientEmail =                self.potentialContacts[self.userToChallengeName] // name:email
-                        //                   // functionality for setting up a new chat
-                        //                    self.createConversation(recipientName: self.messagingContact, recipientEmail: recipientEmail ?? "")
+                        // functionality for setting up a new chat
+                        self.createCompetition(userChallengedName: self.userToChallengeName, userChallengedEmail: userToChallengeEmail ?? "")
                         
+                        // MARK: PUSH SCREEN
                     }
                     
                     
@@ -206,30 +204,86 @@ class CreateChallengeController: UIViewController {
     }
 
     // update all users via info from firestore (accounts for new registrations from different phones)
-    func getAllUsers(completion: @escaping ([String]?, Error?) -> Void) {
-        print("getAllUsersIsBeingCalled")
+    func getAllUsers() {
+    
+        // select user account within firestore
+        if let userEmail = currentUser?.email {
+            
+            self.database.collection("users").getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("An error occurred: \(error)")
+                    
+                    return
+                }
+                //        print("no errors found, continuing")
+                print("printing potential contacts b4 removing:\(self.potentialContacts)")
+                self.potentialContacts.removeAll()
+                let names = querySnapshot?.documents.compactMap { document -> String in
+                    let name = document.data()["name"] as? String ?? "Unknown"
+                    let email = document.data()["email"] as? String ?? ""
+                    print(name, email)
+                    self.potentialContacts[name] = email
+                    return name
+                }
+                print(self.potentialContacts)
+            
+            }
+        }
+    }
+    
+    // for when a selected conversion does not exist yet
+    func createCompetition(userChallengedName: String, userChallengedEmail: String) {
         
-        self.database.collection("users").getDocuments { (querySnapshot, error) in
-        if let error = error {
-            print("test")
-            completion(nil, error)
+        // get current user name and email
+        guard let currentUserEmail = self.currentUser?.email, !currentUserEmail.isEmpty,
+              let currentUserName = self.currentUser?.displayName, !currentUserName.isEmpty else {
+            print("Error: Current user's email or display name is missing.")
             return
         }
-//        print("no errors found, continuing")
-        print("printing potential contacts b4 removing:\(self.potentialContacts)")
-        self.potentialContacts.removeAll()
-        let names = querySnapshot?.documents.compactMap { document -> String in
-            let name = document.data()["name"] as? String ?? "Unknown"
-            let email = document.data()["email"] as? String ?? ""
-            print(name, email)
-            self.potentialContacts[name] = email
-            return name
+        
+        guard !userChallengedEmail.isEmpty else {
+            print("Error: Recipient email is empty.")
+            return
         }
-        print(self.potentialContacts)
-        completion(names, nil)
-//        // Fetch chat messages after fetching all users
-//        self.fetchChatMessages()
+        
+        // create competitionID
+        let compID = UUID().uuidString
+        print("Creating new chat with ID: \(compID)")
+        
+        // MARK: TOMORROW UPDATE BOTH COLLECTIONS OF USERS & COMPETION TO REFLECT CHALLENG UPDATES
+        
+        // update both Competition_ID of the user and challenger to the new compID
+        // Add chat references for both users
+        // first let is address for current user and second is for recipient
+        let currentUserCompRef = self.database.collection("users").document(currentUserName)
+        
+        let challengedUserCompRef = self.database.collection("users").document(userChallengedEmail)
+        
+        // putting in compID name created into both users accounts
+        let compReferenceData: [String: Any] = ["Competition_ID": compID]
+        
+        // Error handling
+        // setting data in users account
+        currentUserCompRef.setData(compReferenceData) { error in
+            if let error = error {
+                print("Error setting chat reference for current user: \(error)")
+                return
+            }
+        }
+
+        // setting data in recipients acc account
+        challengedUserCompRef.setData(compReferenceData) { error in
+            if let error = error {
+                print("Error setting chat reference for recipient: \(error)")
+                return
+            }
+        }
+        print("Chat created successfully. Navigating to chat.")
+        // Navigate to the new chat
+        
+        
+        
     }
-}
+    
     
 }

@@ -109,10 +109,10 @@ class ViewController: UIViewController {
         mainScreen.floatingButtonAddChat.addTarget(self, action: #selector(onAddChatButtonTapped), for: .touchUpInside)
       
         
-        notificationCenter.addObserver(
-            self, selector: #selector(notificationReceivedForChatRecipientSelection(notification:)),
-            name: .NewChallangerSelected,
-            object: nil)
+//        notificationCenter.addObserver(
+//            self, selector: #selector(notificationReceivedForChatRecipientSelection(notification:)),
+//            name: .NewChallangerSelected,
+//            object: nil)
         notificationCenter.addObserver(
             self, selector: #selector(notificationReceivedForNewChatsSent(notification:)),
             name: .NewChatAdded,
