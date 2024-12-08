@@ -20,24 +20,22 @@ class ViewController: UIViewController {
     // creating instance of our HealthManager
     let healthManager = HealthManager()
     var statusLabel: UILabel?
-   
-    var chatsList = [Chat]()
-    let searchChatContactController = SearchBottomSheetController() // search bar for contacts
-    var searchSheetNavController: UINavigationController!
-    var messagingContact = ""
-    var potentialContacts: [String: String] = [:]
+
     let notificationCenter = NotificationCenter.default
     var handleAuth: AuthStateDidChangeListenerHandle?
     var currentUser:FirebaseAuth.User?
     let database = Firestore.firestore()
     
+    var Competition_ID = "None"
+    
     required init?(coder: NSCoder) {
            super.init(coder: coder)
-           // Additional setup if needed
+           
        }
     
     override func loadView() {
         view = mainScreen
+        self.title = "Welcome"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,38 +44,122 @@ class ViewController: UIViewController {
         // adding in a listener to track user's sign-in status
         handleAuth = Auth.auth().addStateDidChangeListener{ auth, user in
             if user == nil{
+                self.title = "Welcome"
+                self.mainScreen.labelText.isHidden = false
                 print("User is nil")
                 //MARK: not signed in...
                 self.currentUser = nil
-                self.mainScreen.labelText.text = "Please sign in to see your profile!" // 11/24 - changed String to fit our app better. Soni
-                self.mainScreen.floatingButtonAddChat.isEnabled = false
-                self.mainScreen.floatingButtonAddChat.isHidden = true
+               
+                self.mainScreen.labelText.text = "Please sign in to see your profile!" 
                 
-                //MARK: Reset tableView...
-                self.chatsList.removeAll()
+                self.mainScreen.buttonCompetition.isEnabled = false
+                self.mainScreen.buttonCompetition.isHidden = true
+          
                 //MARK: Sign in bar button...
                 self.setupRightBarButton(isLoggedin: false)
             }else{
                 
                 //MARK: the user is signed in...
                 self.currentUser = user
-                self.mainScreen.labelText.text = "Welcome \(user?.displayName ?? "Anonymous")!"
-                self.mainScreen.floatingButtonAddChat.isEnabled = true
-                self.mainScreen.floatingButtonAddChat.isHidden = false
-                self.searchChatContactController.userName =  user?.displayName ?? "Anonymous"
-
+                self.title = "Welcome \(user?.displayName ?? "Anonymous")!"
+                self.mainScreen.buttonCompetition.isEnabled = true
+                self.mainScreen.buttonCompetition.isHidden = false
                 
-                // get all most recent messages
-                self.fetchChatMessages()
+                self.loadUserData()
                 //MARK: Logout bar button...
                 self.setupRightBarButton(isLoggedin: true)
+                self.mainScreen.buttonCompetition.addTarget(self, action: #selector(self.onChallengeButtonTapped), for: .touchUpInside)
             }
             
         }
         
     }
     
+   
+    func loadUserData(){
+        self.Competition_ID = self.get_competition_ID()
+        if self.Competition_ID != "None"{
+            
+            mainScreen.buttonCompetition.setTitle("View Challenge", for: .normal)
+            mainScreen.buttonCompetition.backgroundColor = .green
+            
+            }
+        else{
+            mainScreen.buttonCompetition.setTitle("Create Challenge", for: .normal)
+            mainScreen.buttonCompetition.backgroundColor = .red
+        }
+        self.mainScreen.labelText.isHidden = true
+        self.mainScreen.labelWins.isHidden = false
+        self.mainScreen.labelLosses.isHidden = false
+        self.get_wins()
+        self.get_losses()
+        
+        
+    }
     
+    func get_wins(){
+        // Pull the competition from Firestore
+        if let userEmail = currentUser?.email {
+            
+            // Access the document matching the provided competition ID
+            let docRef = self.database.collection("users").document(userEmail)
+            
+            // Fetch the document data for specific competition
+            docRef.getDocument { documentSnapshot, error in
+                //get any errors
+                if let error = error {
+                    print("Error getting document: \(error)")
+                    return
+                }
+                // protection if document doesn't exist
+                guard let document = documentSnapshot, document.exists else {
+                    print("Document does not exist")
+                    return
+                }
+                
+                // Access the user information from the document
+                let UserData = documentSnapshot
+                
+                
+                if let wins = UserData?.get("wins") as? String{
+                    self.mainScreen.labelWins.text = "Wins: \(wins)"
+                }
+            }
+        }
+    }
+    
+    
+    
+    func get_losses(){
+        // Pull the competition from Firestore
+        if let userEmail = currentUser?.email {
+            
+            // Access the document matching the provided competition ID
+            let docRef = self.database.collection("users").document(userEmail)
+            
+            // Fetch the document data for specific competition
+            docRef.getDocument { documentSnapshot, error in
+                //get any errors
+                if let error = error {
+                    print("Error getting document: \(error)")
+                    return
+                }
+                // protection if document doesn't exist
+                guard let document = documentSnapshot, document.exists else {
+                    print("Document does not exist")
+                    return
+                }
+                
+                // Access the user information from the document
+                let UserData = documentSnapshot
+                
+                
+                if let losses = UserData?.get("losses") as? String{
+                    self.mainScreen.labelLosses.text = "Losses: \(losses)"
+                }
+            }
+        }
+    }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -90,317 +172,109 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 11/24 - changed String to fit our app better. Soni
-        title = "My Profile"
-        
-        // Create a label to display the HealthKit status
-        let statusLabel = UILabel()
-        statusLabel.frame = CGRect(x: 20, y: 400, width: 300, height: 50)
-        //statusLabel.text = "HealthKit Status: Not started"
-        view.addSubview(statusLabel)
-        
-        // Store reference to the label so it can be updated later
-        //self.statusLabel = statusLabel
-        
         // Check HealthKit authorization and update status
         healthManager.requestAuthorization { [weak self] success in
           DispatchQueue.main.async {
               if success {
                   self?.statusLabel?.text = "HealthKit Access Granted"
-                  self?.healthManager.saveStepCount() // Save the step count after authorization
+                 // self?.healthManager.saveStepCount() // Save the step count after authorization
               } else {
                   self?.statusLabel?.text = "Authorization Failed"
               }
           }
       }
-        
-  
-        //MARK: patching table view delegate and data source...
-        //mainScreen.tableViewChats.delegate = self
-        //mainScreen.tableViewChats.dataSource = self
-        
-        
-        //MARK: removing the separator line...
-        //mainScreen.tableViewChats.separatorStyle = .none
+
         
         //MARK: Make the titles look large...
+        navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        //MARK: Put the floating button above all the views...
-        view.bringSubviewToFront(mainScreen.floatingButtonAddChat)
-        mainScreen.floatingButtonAddChat.addTarget(self, action: #selector(onAddChatButtonTapped), for: .touchUpInside)
-      
-        
-        notificationCenter.addObserver(
-            self, selector: #selector(notificationReceivedForChatRecipientSelection(notification:)),
-            name: .NewChatSelected,
-            object: nil)
-        notificationCenter.addObserver(
-            self, selector: #selector(notificationReceivedForNewChatsSent(notification:)),
-            name: .NewChatAdded,
-            object: nil)
-        
-    }
-    
-    
-    @objc func notificationReceivedForChatRecipientSelection(notification: Notification){
-        // update all users as double check
-        getAllUsers { names, error in
-               if let error = error {
-                   print("Error fetching user names: \(error)")
-               } else {
-                   print("Fetched names: \(names)")
-               }
-           }
-        if let data = notification.userInfo?["data"] as? String {
-            self.messagingContact = data
-            // check if conversation exists, else create one
-            let userChatRef = self.database.collection("users").document(currentUser?.email ?? "").collection("chats").document(messagingContact)
-            
-            // Check if a conversation exists
-            userChatRef.getDocument { documentSnapshot, error in
-                var chatID: String = ""
-                if let document = documentSnapshot, document.exists {
-                                chatID = document.get("chatID") as? String ?? ""
-                    self.navigateToChat(chatID: chatID, recipientName: self.messagingContact)
-                            }
-                
-                else {
-                    // Conversation doesn't exist, create a new one
-                    print("Creating new conversation with \(self.messagingContact).")
-         
-                    let recipientEmail = self.potentialContacts[self.messagingContact]
-                   
-                    self.createConversation(recipientName: self.messagingContact, recipientEmail: recipientEmail ?? "")
-                    
-                }
-                
-                
-                
-                
-            }
-        }
-    }
-    
-    @objc func notificationReceivedForNewChatsSent(notification: Notification){
-        getAllUsers { names, error in
-            if let error = error {
-                print("Error fetching user names: \(error)")
-            }
-            
-        }
-        //new chat has been sent, refresh main page
-        fetchChatMessages()
-        navigationController?.popViewController(animated: true)
-    }
-    
-    // for when a selected conversion does not exist yet
-    func createConversation(recipientName: String, recipientEmail: String) {
        
-        guard let currentUserEmail = self.currentUser?.email, !currentUserEmail.isEmpty,
-              let currentUserName = self.currentUser?.displayName, !currentUserName.isEmpty else {
-            print("Error: Current user's email or display name is missing.")
-            return
-        }
-
-        guard !recipientEmail.isEmpty else {
-            print("Error: Recipient email is empty.")
-            return
-        }
-
-        // Create recipient's name as document ID for chat
-        let userChatRef = self.database.collection("users").document(currentUserEmail).collection("chats").document(recipientName)
-
-        userChatRef.getDocument { documentSnapshot, error in
-            if let error = error {
-                print("Error checking existing conversation: \(error)")
-                return
+        
+        notificationCenter.addObserver(
+            self, selector: #selector(notificationReceivedForNewChallenge(notification:)),
+            name: .NewChallenge,
+            object: nil)
+  
+        
+    }
+    
+    
+    @objc func notificationReceivedForNewChallenge(notification: Notification){
+      
+        if let data = notification.userInfo?["data"] as? String {
+            self.Competition_ID = data
+        if self.Competition_ID != "None"{
+            mainScreen.buttonCompetition.tintColor = .green
+            mainScreen.buttonCompetition.setTitle("View Challenge", for: .normal)
+            mainScreen.buttonCompetition.setTitleColor(UIColor.white, for: .normal)
+            
             }
-
-            if let document = documentSnapshot, document.exists {
-                // Chat already exists ( probably created by other user) --> this shouldn't happen because of updates every time new chats are made
-                if let existingChatID = document.get("chatID") as? String {
-                    print("Chat already exists with ID: \(existingChatID)")
-                    self.navigateToChat(chatID: existingChatID, recipientName: recipientName)
-                }
-            } else {
-                // Create a new chat
-                let chatID = UUID().uuidString
-                print("Creating new chat with ID: \(chatID)")
-
                 
-                let chatDocumentRef = self.database.collection("chats").document(chatID)
-
-                let chatData: [String: Any] = [
-                    "user1": currentUserName,
-                    "user2": recipientName
-                ]
-
-                chatDocumentRef.setData(chatData) { error in
-                    if let error = error {
-                        print("Error creating new chat: \(error)")
-                        return
-                    }
-
-                    // Add initial message
-                    let messagesCollectionRef = chatDocumentRef.collection("messages")
-                    let initialMessage: [String: Any] = [
-                        "message": "Chat started!",
-                        "sender": "System",
-                        "timestamp": Timestamp(date: Date())
-                    ]
-
-                    messagesCollectionRef.addDocument(data: initialMessage) { error in
-                        if let error = error {
-                            print("Error adding initial message: \(error)")
-                        }
-                    }
-
-                    // Add chat references for both users
-                    let currentUserChatRef = self.database.collection("users").document(currentUserEmail).collection("chats").document(recipientName)
-                    let recipientChatRef = self.database.collection("users").document(recipientEmail).collection("chats").document(currentUserName)
-
-                    let chatReferenceData: [String: Any] = ["chatID": chatID]
-
-                    // Error handling
-                    currentUserChatRef.setData(chatReferenceData) { error in
-                        if let error = error {
-                            print("Error setting chat reference for current user: \(error)")
-                            return
-                        }
-                    }
-
-                    recipientChatRef.setData(chatReferenceData) { error in
-                        if let error = error {
-                            print("Error setting chat reference for recipient: \(error)")
-                            return
-                        }
-                    }
-                    print("Chat created successfully. Navigating to chat.")
-                    // Navigate to the new chat
-                    self.navigateToChat(chatID: chatID, recipientName: recipientName)
-                }
             }
         }
-    }
-
-
-
-    // push to chat screen with chat ID
-    func navigateToChat(chatID: String, recipientName: String) {
-//        let chatViewController = ChatViewController()
-//        chatViewController.chatID = chatID
-//        chatViewController.messagingContact = recipientName
-//        self.navigationController?.pushViewController(chatViewController, animated: true)
+    
+    
+   
+  
+    @objc func onChallengeButtonTapped(){
+        self.Competition_ID = get_competition_ID()
+        print("competition_ID is \(self.Competition_ID)")
+        if self.Competition_ID == "None"{
+            let createChallengeScreen = CreateChallengeController()
+           
+            self.navigationController?.pushViewController(createChallengeScreen, animated: true)
+        }
+        else{
+            let currentChallengeScreen = CurrentChallengeViewController()
+            currentChallengeScreen.competitionID = self.Competition_ID
+            
+            self.navigationController?.pushViewController(currentChallengeScreen, animated: true)
+        }
     }
     
-    // fetch all message chains (only most recently sent message)
-    func fetchChatMessages() {
-        guard let userEmail = currentUser?.email else {
-            print("Current user email is nil.")
-            return
-        }
-
-        self.chatsList.removeAll()
-
-        self.database.collection("users").document(userEmail).collection("chats").getDocuments { querySnapshot, error in
-            if let error = error {
-                print("Error fetching chats: \(error)")
-                return
-            }
-
-            guard let documents = querySnapshot?.documents else {
-                print("No chats found for the user.")
-                return
-            }
-
-            for document in documents {
-                guard let chatID = document.get("chatID") as? String, !chatID.isEmpty else {
-                    print("chatID is missing or empty for document: \(document.documentID)")
-                    continue
+    func get_competition_ID()-> String{
+        // Pull the competition from Firestore
+        if let userEmail = currentUser?.email {
+            
+            // Access the document matching the provided competition ID
+            let docRef = self.database.collection("users").document(userEmail)
+            
+            // Fetch the document data for specific competition
+            docRef.getDocument { documentSnapshot, error in
+                //get any errors
+                if let error = error {
+                    print("Error getting document: \(error)")
+                    return
                 }
-
-                let recipientName = document.documentID
-
-                let lastMessageRef = self.database.collection("chats").document(chatID).collection("messages")
-                    .order(by: "timestamp", descending: true)
-                    .limit(to: 1)
-
-                lastMessageRef.getDocuments { messageSnapshot, error in
-                    if let error = error {
-                        print("Error fetching last message for chatID \(chatID): \(error)")
-                        return
+                // protection if document doesn't exist
+                guard let document = documentSnapshot, document.exists else {
+                    print("Document does not exist")
+                    return
+                }
+                
+                // Access the user information from the document
+                let UserData = documentSnapshot
+                
+                
+                    if let competition_ID = UserData?.get("Competition_ID") as? String{
+                    
+                    
+                    
+                    if competition_ID == "None"{
+                        self.Competition_ID = competition_ID
+                        
                     }
-
-                    if let messageDocument = messageSnapshot?.documents.first {
-                        let message = messageDocument.get("message") as? String ?? ""
-                        let sender = messageDocument.get("sender") as? String ?? "Unknown"
-                        let timestamp = messageDocument.get("timestamp") as? Timestamp ?? Timestamp(date: Date())
-
-                        let chat = Chat(chatId: chatID, name: recipientName, messageSent: message, timeStamp: timestamp)
-                        self.chatsList.append(chat)
-                    }
-
-                    DispatchQueue.main.async {
-                        //self.mainScreen.tableViewChats.reloadData()
+                    else{
+                        self.Competition_ID =  competition_ID
+                       
                     }
                 }
-            }
+                else{
+                    print("Could not fetch competition_ID")
+                }}
         }
+   
+        return Competition_ID
     }
 
-
-    // update all users via info from firestore (accounts for new registrations from different phones)
-
-    func getAllUsers(completion: @escaping ([String]?, Error?) -> Void) {
-        let db = Firestore.firestore()
-        db.collection("users").getDocuments { (querySnapshot, error) in
-            if let error = error {
-                completion(nil, error)
-                return
-            }
-            self.potentialContacts.removeAll()
-            // TD: verify that this is the place where we would add functionality for user data for Better App
-            let names = querySnapshot?.documents.compactMap { document -> String in
-                let name = document.data()["name"] as? String ?? "Unknown"
-                let email = document.data()["email"] as? String ?? ""
-                print(name, email)
-                self.potentialContacts[name] = email
-                return name
-            }
-            print(self.potentialContacts)
-            completion(names, nil)
-            // Fetch chat messages after fetching all users
-            self.fetchChatMessages()
-        }
-    }
-    
-    
-    func setupSearchBottomSheet(){
-        //MARK: setting up bottom search sheet...
-        searchSheetNavController = UINavigationController(rootViewController: searchChatContactController)
-        
-        // MARK: setting up modal style...
-        searchSheetNavController.modalPresentationStyle = .pageSheet
-        
-        if let bottomSearchSheet = searchSheetNavController.sheetPresentationController{
-            bottomSearchSheet.detents = [.medium(), .large()]
-            bottomSearchSheet.prefersGrabberVisible = true
-        }
-    }
-    
-    @objc func onAddChatButtonTapped(){
-        setupSearchBottomSheet()
-        
-        present(searchSheetNavController, animated: true)
-    }
-    func convertTimestampToString(timestamp: Timestamp) -> String {
-
-        let date = timestamp.dateValue()
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        return dateFormatter.string(from: date)
-    }
 }
