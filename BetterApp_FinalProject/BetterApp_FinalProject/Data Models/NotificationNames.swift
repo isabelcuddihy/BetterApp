@@ -12,5 +12,8 @@ extension Notification.Name{
     
     // notifies to refresh all notes table
     static let NewChatAdded = Notification.Name("NewChatAdded") // notifies to refresh all notes table
-
+    
+    // notification to send to Isabel's controller the CompID
+    static let NewChallenge = Notification.Name("NewChallenge")
+     
 }

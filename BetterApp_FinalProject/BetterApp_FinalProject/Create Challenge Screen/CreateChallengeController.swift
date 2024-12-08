@@ -7,6 +7,8 @@
 
 import UIKit
 import HealthKit // import healthkit
+import FirebaseFirestore
+import FirebaseAuth
 
 class CreateChallengeController: UIViewController {
     
@@ -20,8 +22,25 @@ class CreateChallengeController: UIViewController {
     
     let healthStore = HKHealthStore() // create healthsore instance to access data
     
+    var potentialContacts: [String: String] = [:] // all potential contacts as name:email -> key value meil pair
+    
+    // notification center to grab name + ottehr important data
+    let notificationCenter = NotificationCenter.default
+    
+    let database = Firestore.firestore()
+    
+    var userToChallengeName = "" // selected user to message
+
+
+    
     override func loadView() {
         view = createChallengeView
+        
+        // test receiving name data from notification center (using observer to see if NewCHallengerSelected Notification is called)
+        notificationCenter.addObserver(
+            self, selector: #selector(notificationReceivedForNewChallengerSelected(notification:)),
+            name: .NewChallangerSelected,
+            object: nil)
     }
     
     override func viewDidLoad() {
@@ -132,6 +151,85 @@ class CreateChallengeController: UIViewController {
         // Execute the query
         healthStore.execute(query)
         
-        
     }
+    
+    // This function serves to write data to database (both user names and chat IDs for now)
+    @objc func notificationReceivedForNewChallengerSelected(notification: Notification){
+        // update all users as double check (get name:email key:value pairs
+        getAllUsers { names, error in
+            if let error = error {
+                print("Error fetching user names: \(error)")
+            } else {
+                print("Fetched names: \(names)")
+            }
+        }
+        if let data = notification.userInfo?["data"] as? String {
+            // data (name) recived of the person we want to talk to
+            self.userToChallengeName = data
+            
+            print("potential users: \(potentialContacts)")
+            print("user being challenged: \(userToChallengeName)")
+            print("email (key:value) of user being challenged \(self.potentialContacts[self.userToChallengeName])")
+            
+            // userBeingChallenged's email
+            let userToChallengeEmail =                self.potentialContacts[self.userToChallengeName] // name:email
+            
+            // check if competition exists (for current user), else create one
+            // getting pathway right now to curr user fields
+            let userCompRef = self.database.collection("users").document(userToChallengeEmail ?? "")
+            
+            // Check if a conversation exists
+            userCompRef.getDocument { documentSnapshot, error in
+                var compID: String = ""
+                if let document = documentSnapshot, document.exists {
+                    // get competitionID
+                    compID = document.get("Competition_ID") as? String ?? ""
+                    
+                    if compID != "none" {
+                        print("user \(self.userToChallengeName) is already in a competition")
+                        return // Preview Alert User is in competition
+                    } else {
+                        // challenge doesn't exist, create a new one
+                        print("Creating new conversation with \(self.userToChallengeName).")
+                        
+                        //                    // key of persons name to get email (which is the value)
+                        //                    let recipientEmail =                self.potentialContacts[self.userToChallengeName] // name:email
+                        //                   // functionality for setting up a new chat
+                        //                    self.createConversation(recipientName: self.messagingContact, recipientEmail: recipientEmail ?? "")
+                        
+                    }
+                    
+                    
+                }
+            }
+        }
+    }
+
+    // update all users via info from firestore (accounts for new registrations from different phones)
+    func getAllUsers(completion: @escaping ([String]?, Error?) -> Void) {
+        print("getAllUsersIsBeingCalled")
+        
+        self.database.collection("users").getDocuments { (querySnapshot, error) in
+        if let error = error {
+            print("test")
+            completion(nil, error)
+            return
+        }
+//        print("no errors found, continuing")
+        print("printing potential contacts b4 removing:\(self.potentialContacts)")
+        self.potentialContacts.removeAll()
+        let names = querySnapshot?.documents.compactMap { document -> String in
+            let name = document.data()["name"] as? String ?? "Unknown"
+            let email = document.data()["email"] as? String ?? ""
+            print(name, email)
+            self.potentialContacts[name] = email
+            return name
+        }
+        print(self.potentialContacts)
+        completion(names, nil)
+//        // Fetch chat messages after fetching all users
+//        self.fetchChatMessages()
+    }
+}
+    
 }
