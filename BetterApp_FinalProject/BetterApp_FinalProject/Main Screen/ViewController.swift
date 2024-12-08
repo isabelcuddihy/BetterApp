@@ -30,11 +30,12 @@ class ViewController: UIViewController {
     
     required init?(coder: NSCoder) {
            super.init(coder: coder)
-           // Additional setup if needed
+           
        }
     
     override func loadView() {
         view = mainScreen
+        self.title = "Welcome"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,17 +44,19 @@ class ViewController: UIViewController {
         // adding in a listener to track user's sign-in status
         handleAuth = Auth.auth().addStateDidChangeListener{ auth, user in
             if user == nil{
+                self.title = "Welcome"
+                self.mainScreen.labelText.isHidden = false
                 print("User is nil")
                 //MARK: not signed in...
                 self.currentUser = nil
-                self.mainScreen.labelText.isHidden = false
+
+               
                 self.mainScreen.labelText.text = "Please sign in to see your profile!" 
                 
                 self.mainScreen.buttonCompetition.isEnabled = false
                 self.mainScreen.buttonCompetition.isHidden = true
-                
-                //MARK: Reset tableView...
-               
+          
+
                 //MARK: Sign in bar button...
                 self.setupRightBarButton(isLoggedin: false)
             }else{
@@ -65,11 +68,10 @@ class ViewController: UIViewController {
                 self.mainScreen.buttonCompetition.isHidden = false
                 
                 self.loadUserData()
-                
 
-            
                 //MARK: Logout bar button...
                 self.setupRightBarButton(isLoggedin: true)
+                self.mainScreen.buttonCompetition.addTarget(self, action: #selector(self.onChallengeButtonTapped), for: .touchUpInside)
             }
             
         }
@@ -97,6 +99,9 @@ class ViewController: UIViewController {
         
         
     }
+
+    
+
     
     func get_wins(){
         // Pull the competition from Firestore
@@ -130,7 +135,7 @@ class ViewController: UIViewController {
     }
     
     
-    
+
     func get_losses(){
         // Pull the competition from Firestore
         if let userEmail = currentUser?.email {
@@ -173,14 +178,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
         title = "Welcome!"
         
+
         // Check HealthKit authorization and update status
         healthManager.requestAuthorization { [weak self] success in
           DispatchQueue.main.async {
               if success {
                   self?.statusLabel?.text = "HealthKit Access Granted"
-                 
+
               } else {
                   self?.statusLabel?.text = "Authorization Failed"
               }
@@ -189,12 +196,10 @@ class ViewController: UIViewController {
 
         
         //MARK: Make the titles look large...
+        navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        //MARK: Put the floating button above all the views...
-        view.bringSubviewToFront(mainScreen.buttonCompetition)
-        mainScreen.buttonCompetition.addTarget(self, action: #selector(onChallengeButtonTapped), for: .touchUpInside)
-      
+       
+
         
         notificationCenter.addObserver(
             self, selector: #selector(notificationReceivedForNewChallenge(notification:)),
@@ -225,13 +230,17 @@ class ViewController: UIViewController {
     @objc func onChallengeButtonTapped(){
         self.Competition_ID = get_competition_ID()
         print("competition_ID is \(self.Competition_ID)")
-        if self.Competition_ID != "None"{
+
+
+        if self.Competition_ID == "None"{
             let createChallengeScreen = CreateChallengeController()
+
             self.navigationController?.pushViewController(createChallengeScreen, animated: true)
         }
         else{
             let currentChallengeScreen = CurrentChallengeViewController()
             currentChallengeScreen.competitionID = self.Competition_ID
+
             self.navigationController?.pushViewController(currentChallengeScreen, animated: true)
         }
     }
@@ -277,7 +286,7 @@ class ViewController: UIViewController {
                     print("Could not fetch competition_ID")
                 }}
         }
-        print(Competition_ID)
+
         return Competition_ID
     }
 
