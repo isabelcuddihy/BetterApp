@@ -48,6 +48,7 @@ class CreateChallengeController: UIViewController {
         createChallengeView.buttonSelectDays.menu = getMenuTypes()
         
         createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onChooseFriendButtonTapped), for: .touchUpInside)
+
        
         // test receiving name data from notification center (using observer to see if NewCHallengerSelected Notification is called)
         notificationCenter.addObserver(
@@ -92,11 +93,8 @@ class CreateChallengeController: UIViewController {
         present(searchSheetNavController, animated: true)
     }
     
-//    @objc func onChooseFriendButtonTapped(){
-//        requestHealthKitAuthorization() // created this function to force steps data from health kit. trying to figure out where its being printed
-//        print("onChooseFriendButtonTapped")
-//    }
     
+
     // This function serves to write data to database (both user names and chat IDs for now)
     @objc func notificationReceivedForNewChallengerSelected(notification: Notification){
        
@@ -180,4 +178,5 @@ class CreateChallengeController: UIViewController {
         }
     }
     
+
 }
