@@ -7,10 +7,14 @@
 
 import UIKit
 import HealthKit // import healthkit
+import FirebaseFirestore
+import FirebaseAuth
 
 class CreateChallengeController: UIViewController {
     
     let createChallengeView = CreateChallengeView()
+    //Login Authorization for User
+    let currentUser = Auth.auth().currentUser
     
     //MARK: by default day selected (7)
     var selectedType = "7"
@@ -20,25 +24,38 @@ class CreateChallengeController: UIViewController {
     
     let healthStore = HKHealthStore() // create healthsore instance to access data
     
+    var potentialContacts: [String: String] = [:] // all potential contacts as name:email -> key value meil pair
+    
+    // notification center to grab name + ottehr important data
+    let notificationCenter = NotificationCenter.default
+    
+    let database = Firestore.firestore()
+    
+    var userToChallengeName = "" // selected user to message
+
+
+    
     override func loadView() {
         view = createChallengeView
+        
+       
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        getAllUsers()
         //MARK:  adding menue to buttonSelectDays
         createChallengeView.buttonSelectDays.menu = getMenuTypes()
         
         createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onChooseFriendButtonTapped), for: .touchUpInside)
-        
-        // Request authorization when the view loads
-        requestHealthKitAuthorization()
-        
-        print("this statement is printed after view is loaded")
-//        
-//        createChallengeView.buttonChooseFriend.addTarget(self, action: #selector(onChooseFriendButtonTapped), for: .touchUpInside)
-//        onChallengeButtonTapped
+       
+        // test receiving name data from notification center (using observer to see if NewCHallengerSelected Notification is called)
+        notificationCenter.addObserver(
+            self, selector: #selector(notificationReceivedForNewChallengerSelected(notification:)),
+            name: .NewChallengerSelected,
+            object: nil)
+       
+
     }
     
     //MARK: menu for buttonSelectDays setup...
@@ -80,58 +97,86 @@ class CreateChallengeController: UIViewController {
 //        print("onChooseFriendButtonTapped")
 //    }
     
-    
-    // Request HealthKit authorization
-    func requestHealthKitAuthorization() {
-        guard let stepType = HKObjectType.quantityType(forIdentifier: .stepCount) else {
-            print("Step Count unavailable.")
-            return
-        }
+    // This function serves to write data to database (both user names and chat IDs for now)
+    @objc func notificationReceivedForNewChallengerSelected(notification: Notification){
+       
         
-        let readTypes: Set<HKObjectType> = [stepType]
-        
-        // Request permission from the user
-        healthStore.requestAuthorization(toShare: nil, read: readTypes) { success, error in
-            if success {
-                print("HealthKit authorization granted.")
-                // Fetch steps for the last day once authorized
-                self.fetchStepsForLastDay()
-            } else {
-                print("HealthKit authorization failed: \(error?.localizedDescription ?? "Unknown error")")
-            }
-        }
-    }
-    
-    // Fetch and print steps for the last day
-    func fetchStepsForLastDay() {
-        // TODO: Q: Ask team how is this line know how to access the step data"? what is it doing?
-        guard let stepType = HKObjectType.quantityType(forIdentifier: .stepCount) else {
-            print("Step Count type is unavailable.")
-            return
-        }
-        
-        // Define the start and end date for the last day
-        let startOfDay = Calendar.current.startOfDay(for: Date())
-        let endOfDay = Date()
-        
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
-        let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
-            if let error = error {
-                print("Error fetching steps: \(error.localizedDescription)")
-                return
+        if let data = notification.userInfo?["data"] as? String {
+            // data (name) recived of the person we want to talk to
+            self.userToChallengeName = data
+            
+            print(potentialContacts)
+            print(userToChallengeName)
+            if self.potentialContacts.isEmpty {
+                print("Dictionary is empty")
             }
             
-            if let sum = result?.sumQuantity() {
-                let steps = sum.doubleValue(for: HKUnit.count())
-                print("Total steps in the last day: \(Int(steps))")
-            } else {
-                print("No steps data found for the last day.")
+            // key of persons name to get email (which is the value)
+            let userToChallengeEmail =                self.potentialContacts[self.userToChallengeName] // name:email
+            
+            // check if competition exists (for current user), else create one
+            // getting pathway right now to curr user fields
+            let userCompRef = self.database.collection("users").document(userToChallengeEmail ?? "")
+            
+            // Check if a conversation exists
+            userCompRef.getDocument { documentSnapshot, error in
+                var compID: String = ""
+                if let document = documentSnapshot, document.exists {
+                    compID = document.get("Competition_ID") as? String ?? ""
+                    
+                    if compID == "none" {
+                        print("user \(self.userToChallengeName) is alread in a competition")
+                    }
+                    // pushes us to current chat if it exixsts
+                    return
+//                    self.navigateToChat(chatID: chatID, recipientName: self.userToChallenge)
+                            }
+                
+                else {
+                    // challenge doesn't exist, create a new one
+                    print("Creating new conversation with \(self.userToChallengeName).")
+         
+//                    // key of persons name to get email (which is the value)
+//                    let recipientEmail =                self.potentialContacts[self.userToChallengeName] // name:email
+//                   // functionality for setting up a new chat
+//                    self.createConversation(recipientName: self.messagingContact, recipientEmail: recipientEmail ?? "")
+                    
+                }
+                
+                
             }
         }
-        
-        // Execute the query
-        healthStore.execute(query)
-        
-        
     }
+    
+  
+    
+
+    // update all users via info from firestore (accounts for new registrations from different phones)
+    func getAllUsers() {
+     
+        // select user account within firestore
+        if let userEmail = currentUser?.email {
+            
+            self.database.collection("users").getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("An error occurred: \(error)")
+                    
+                    return
+                }
+                //        print("no errors found, continuing")
+                print("printing potential contacts b4 removing:\(self.potentialContacts)")
+                self.potentialContacts.removeAll()
+                let names = querySnapshot?.documents.compactMap { document -> String in
+                    let name = document.data()["name"] as? String ?? "Unknown"
+                    let email = document.data()["email"] as? String ?? ""
+                    print(name, email)
+                    self.potentialContacts[name] = email
+                    return name
+                }
+                print(self.potentialContacts)
+             
+            }
+        }
+    }
+    
 }
