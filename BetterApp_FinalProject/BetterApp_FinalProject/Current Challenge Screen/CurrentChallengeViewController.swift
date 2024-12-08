@@ -122,22 +122,25 @@ class CurrentChallengeViewController: UIViewController {
                     
                     // Get start time for competition -> determines how many days are left in competition
                     if let timestamp = competitionData?.get("start_time") as? Timestamp {
+                        
                         current_competition.challenge_date = timestamp.dateValue()
                         self.start_date = timestamp.dateValue()
-                          
+                        print(self.start_date)
                           // Ensure start_date is not nil before proceeding
                           if let startDate = self.start_date {
                               // Add the competition length (number of days) to the start date
-                              if let calculatedEndDate = self.calendar.date(byAdding: .day, value: current_competition.number_of_days, to: startDate) {
-                                  self.end_date = calculatedEndDate
-                                  print("Start Date: \(self.start_date)" ?? "EMPTY")
-                                  print("End Date: \(self.end_date)" ?? "EMPTY")
+                              if let calculatedEndDate = self.end_date {
+                                      if calculatedEndDate <= startDate {
+                                          self.end_date = Calendar.current.date(byAdding: .second, value: 1, to: startDate)
+                                      }
+                                      print("Start Date: \(self.start_date ?? Date())")
+                                      print("End Date: \(self.end_date ?? Date())")
+                                  } else {
+                                      print("Failed to calculate end date.")
+                                  }
                               } else {
-                                  print("Failed to calculate end date.")
+                                  print("Start date is nil.")
                               }
-                          } else {
-                              print("Start date is nil.")
-                          }
                     } else {
                         print("Error: start_time is not a valid Timestamp")
                     }
@@ -159,9 +162,20 @@ class CurrentChallengeViewController: UIViewController {
                         current_competition.challenge_date = timestamp.dateValue()
                         print("Start time: \(timestamp.dateValue())")
                         self.start_date = timestamp.dateValue()
-                        self.end_date = timestamp.dateValue() + TimeInterval(current_competition.number_of_days * 86400)
-                  
-
+                        if let startDate = self.start_date {
+                            // Add the competition length (number of days) to the start date
+                            if let calculatedEndDate = self.end_date {
+                                    if calculatedEndDate <= startDate {
+                                        self.end_date = Calendar.current.date(byAdding: .second, value: 1, to: startDate)
+                                    }
+                                    print("Start Date: \(self.start_date ?? Date())")
+                                    print("End Date: \(self.end_date ?? Date())")
+                                } else {
+                                    print("Failed to calculate end date.")
+                                }
+                            } else {
+                                print("Start date is nil.")
+                            }
                     } else {
                         print("Error: start_time is not a valid Firebase Timestamp")
                     }
@@ -253,7 +267,7 @@ class CurrentChallengeViewController: UIViewController {
         
         // grabbing date from date range
         let predicate = HKQuery.predicateForSamples(withStart: self.start_date, end: self.end_date, options: .strictStartDate)
-        print(self.start_date, self.end_date)
+        
         //query the step statistic from HealthKit
         let query = HKStatisticsQuery(quantityType: stepType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, error in
             if let error = error {
@@ -360,6 +374,8 @@ class CurrentChallengeViewController: UIViewController {
         
         // Execute the query
         healthStore.execute(query)
+        
+        
     }
     
     // Update steps in Firebase
